@@ -9,28 +9,36 @@ namespace Task2.Figures.Tests
     [TestClass]
     public class TriangleTests
     {
-        [TestMethod]
-        public void TriangleTest()
+        private Triangle _triangle;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            Assert.Fail();
+            _triangle = new Triangle(3, 4, 5);
         }
 
         [TestMethod]
-        public void GetFigureAreaTest()
+        public void GetFigureArea_TriangleWhithSides3And4And5_28Returned()
         {
-            Assert.Fail();
+            var expectedArea = 6;
+            var actual = _triangle.GetFigureArea();
+            Assert.AreEqual(expectedArea, actual, 0.1);
         }
 
         [TestMethod]
-        public void GetFigurePerimeterTest()
+        public void GetFigurePerimeter_TriangleWhithSides3And4And5_9Returned()
         {
-            Assert.Fail();
+            var expectedPerimeter = 12;
+            var actual = _triangle.GetFigurePerimeter();
+            Assert.AreEqual(expectedPerimeter, actual, 0.1);
         }
 
         [TestMethod]
         public void ToStringTest()
         {
-            Assert.Fail();
+            var expectedString = "Triangle: 3 4 5";
+            var actual = _triangle.ToString();
+            Equals(expectedString, actual);
         }
     }
 }

@@ -9,25 +9,36 @@ namespace Task2.Figures.Tests
     [TestClass]
     public class CircleTests
     {
+        private Circle _circle;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _circle = new Circle(3);
+        }
+
         [TestMethod]
         public void GetFigureArea_CircleWhithRadius3_28Returned()
         {
-            var circle = new Circle(3);
-            var expectedArea = 3.14 * 9;
-            var actual = circle.GetFigureArea();
+            var expectedArea = 28.26;
+            var actual = _circle.GetFigureArea();
             Assert.AreEqual(expectedArea, actual, 0.1);
         }
 
         [TestMethod]
-        public void GetFigurePerimeter_CircleWhithRadius3_28Returned()
+        public void GetFigurePerimeter_CircleWhithRadius3_18Returned()
         {
-            Assert.Fail();
+            var expectedPerimeter = 18.84;
+            var actual = _circle.GetFigurePerimeter();
+            Assert.AreEqual(expectedPerimeter, actual, 0.1);
         }
 
         [TestMethod]
         public void ToStringTest()
         {
-            Assert.Fail();
+            var expectedString = "Circle: 3";
+            var actual = _circle.ToString();
+            Equals(expectedString, actual);
         }
     }
 }

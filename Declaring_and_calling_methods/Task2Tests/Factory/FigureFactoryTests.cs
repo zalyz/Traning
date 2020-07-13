@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Task2.Figures;
 
 namespace Task2.Factory.Tests
 {
@@ -9,9 +10,12 @@ namespace Task2.Factory.Tests
     public class FigureFactoryTests
     {
         [TestMethod]
-        public void CreateFigureTest()
+        public void CreateFigure_LineWhithRectandleData_RectangleWhithSides2And3Returned()
         {
-            Assert.Fail();
+            var figureDataLine = "Rectangle 3 2";
+            var expectedRectangle = new Rectangle(2, 3);
+            var actualRectangle = FigureFactory.CreateFigure(figureDataLine);
+            Equals(expectedRectangle.ToString(), actualRectangle.ToString());
         }
     }
 }

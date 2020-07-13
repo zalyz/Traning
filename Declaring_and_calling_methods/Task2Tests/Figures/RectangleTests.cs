@@ -9,28 +9,36 @@ namespace Task2.Figures.Tests
     [TestClass]
     public class RectangleTests
     {
-        [TestMethod]
-        public void RectangleTest()
+        private Rectangle _rectangle;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            Assert.Fail();
+            _rectangle = new Rectangle(2, 3);
         }
 
         [TestMethod]
-        public void GetFigureAreaTest()
+        public void GetFigureArea_RectangleWhithSides2And3_6Returned()
         {
-            Assert.Fail();
+            var expectedArea = 6;
+            var actual = _rectangle.GetFigureArea();
+            Assert.AreEqual(expectedArea, actual);
         }
 
         [TestMethod]
-        public void GetFigurePerimeterTest()
+        public void GetFigurePerimeter_RectangleWhithSides2And3_10Returned()
         {
-            Assert.Fail();
+            var expectedPerimeter = 10;
+            var actual = _rectangle.GetFigurePerimeter();
+            Assert.AreEqual(expectedPerimeter, actual);
         }
 
         [TestMethod]
         public void ToStringTest()
         {
-            Assert.Fail();
+            var expectedString = "Circle: 3";
+            var actual = _rectangle.ToString();
+            Equals(expectedString, actual);
         }
     }
 }

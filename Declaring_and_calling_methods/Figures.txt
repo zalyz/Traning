@@ -1,0 +1,3 @@
+Triangle 1 2 4
+Rectangle 2 4
+Quadrant 5

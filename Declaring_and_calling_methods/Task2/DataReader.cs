@@ -14,7 +14,7 @@ namespace Task2
         /// </summary>
         /// <param name="path"> File path.</param>
         /// <returns> Array of geometric figures.</returns>
-        public static Figure[] ReadFigureFrom(string path)
+        public static Figure[] ReadFiguresFrom(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException("File path is not correct.");

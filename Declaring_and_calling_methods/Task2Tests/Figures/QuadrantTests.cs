@@ -9,28 +9,36 @@ namespace Task2.Figures.Tests
     [TestClass]
     public class QuadrantTests
     {
-        [TestMethod]
-        public void QuadrantTest()
+        private Quadrant _quadrant;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            Assert.Fail();
+            _quadrant = new Quadrant(4);
         }
 
         [TestMethod]
-        public void GetFigureAreaTest()
+        public void GetFigureArea_QuadrantWhithRadius4_12Returned()
         {
-            Assert.Fail();
+            var expectedArea = 12.56;
+            var actual = _quadrant.GetFigureArea();
+            Assert.AreEqual(expectedArea, actual, 0.1);
         }
 
         [TestMethod]
-        public void GetFigurePerimeterTest()
+        public void GetFigurePerimeter_QuadrantWhithRadius4_14Returned()
         {
-            Assert.Fail();
+            var expectedPerimeter = 14.28;
+            var actual = _quadrant.GetFigurePerimeter();
+            Assert.AreEqual(expectedPerimeter, actual, 0.1);
         }
 
         [TestMethod]
         public void ToStringTest()
         {
-            Assert.Fail();
+            var expectedString = "Quadrant: 4";
+            var actual = _quadrant.ToString();
+            Equals(expectedString, actual);
         }
     }
 }
