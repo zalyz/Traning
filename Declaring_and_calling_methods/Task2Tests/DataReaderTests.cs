@@ -14,7 +14,7 @@ namespace Task2.Tests
         public void ReadFiguresFromTest()
         {
             var filePath = @"../../../../Figures.txt";
-            Figure[] expectedArrayOfFigures = { new Triangle(1, 2, 4), new Rectangle(2, 4), new Quadrant(5)};
+            Figure[] expectedArrayOfFigures = { new Triangle(1, 2, 4), new Rectangle(2, 4), new Quadrant(5), new Circle(3)};
             var actualArrayOfFigures = DataReader.ReadFiguresFrom(filePath);
             CollectionAssert.AreEqual(expectedArrayOfFigures, actualArrayOfFigures);
         }

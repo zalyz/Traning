@@ -3,6 +3,7 @@ using Task2.Figures;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Task2.Figures.Tests
 {
@@ -31,6 +32,16 @@ namespace Task2.Figures.Tests
             var expectedPerimeter = 10;
             var actual = _rectangle.GetFigurePerimeter();
             Assert.AreEqual(expectedPerimeter, actual);
+        }
+
+        [TestMethod]
+        public void EqualsTest()
+        {
+            var filePath = @"../../../../Figures.txt";
+            var arrayOfFigures = DataReader.ReadFiguresFrom(filePath);
+            var expectedFigure = new Rectangle(2, 4);
+            var actualFigure = arrayOfFigures.Where(e => e.Equals(expectedFigure));
+            Equals(expectedFigure.ToString(), actualFigure.ToString());
         }
 
         [TestMethod]
