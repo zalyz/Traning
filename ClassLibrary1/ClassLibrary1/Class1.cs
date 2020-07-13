@@ -4,7 +4,6 @@ namespace ClassLibrary1
 {
     public class Class1
     {
-        уво
-            йудови
+        public int MyProperty { get; set; }
     }
 }
