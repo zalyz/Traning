@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vector", "Vector\Vector.csproj", "{F4BE1EEB-84CF-4722-AFDA-3BB0EFB75D29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorTests", "VectorTests\VectorTests.csproj", "{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VectorTests", "VectorTests\VectorTests.csproj", "{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polynomial", "Polynomial\Polynomial.csproj", "{6938E58A-DF4E-4FE0-8378-2AF9A71410FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PolynomialTests", "PolynomialTests\PolynomialTests.csproj", "{784A4781-BD79-4C5F-B453-393946D3A10C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6938E58A-DF4E-4FE0-8378-2AF9A71410FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6938E58A-DF4E-4FE0-8378-2AF9A71410FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6938E58A-DF4E-4FE0-8378-2AF9A71410FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6938E58A-DF4E-4FE0-8378-2AF9A71410FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{784A4781-BD79-4C5F-B453-393946D3A10C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{784A4781-BD79-4C5F-B453-393946D3A10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{784A4781-BD79-4C5F-B453-393946D3A10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{784A4781-BD79-4C5F-B453-393946D3A10C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

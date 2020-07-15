@@ -27,16 +27,25 @@ namespace Vector
 
         public static double ScalarProduct(Vector firstVector, Vector secondVector)
         {
+            if (Equals(firstVector, null) || Equals(secondVector, null))
+                throw new ArgumentNullException("Parameter can't be null");
+
             return firstVector.X * secondVector.X + firstVector.Y * secondVector.Y + firstVector.Z * secondVector.Z;
         }
 
         public static double ScalarProduct(Vector firstVector, Vector secondVector, double angleBetweenInDegrees)
         {
+            if (Equals(firstVector, null) || Equals(secondVector, null))
+                throw new ArgumentNullException("Parameter can't be null");
+
             return firstVector.Length * secondVector.Length * Math.Cos(angleBetweenInDegrees);
         }
 
         public static double MixedProduct(Vector firstVector, Vector secondVector, Vector thirdVector)
         {
+            if (Equals(firstVector, null) || Equals(secondVector, null) || Equals(thirdVector, null))
+                throw new ArgumentNullException("Parameter can't be null");
+
             return ( firstVector.X * secondVector.Y * thirdVector.Z +
                      firstVector.Y * secondVector.Z * thirdVector.X +
                      firstVector.Z * secondVector.X * thirdVector.Y) -
