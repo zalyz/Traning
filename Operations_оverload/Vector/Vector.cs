@@ -25,6 +25,11 @@ namespace Vector
             Z = coordinateZ;
         }
 
+        public static double ScalarProduct(Vector firstVector, Vector secondVector)
+        {
+            return firstVector.X * secondVector.X + firstVector.Y * secondVector.Y + firstVector.Z * secondVector.Z;
+        }
+
         public static double ScalarProduct(Vector firstVector, Vector secondVector, double angleBetweenInDegrees)
         {
             return firstVector.Length * secondVector.Length * Math.Cos(angleBetweenInDegrees);
@@ -78,7 +83,7 @@ namespace Vector
             return new Vector(resultX, resultY, resultZ);
         }
 
-        public static Vector operator *(Vector vector1, int number)
+        public static Vector operator *(Vector vector1, double number)
         {
             return new Vector(
                 vector1.X * number,

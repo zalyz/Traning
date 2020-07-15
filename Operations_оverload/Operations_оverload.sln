@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vector", "Vector\Vector.csproj", "{F4BE1EEB-84CF-4722-AFDA-3BB0EFB75D29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vector", "Vector\Vector.csproj", "{F4BE1EEB-84CF-4722-AFDA-3BB0EFB75D29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VectorTests", "VectorTests\VectorTests.csproj", "{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F4BE1EEB-84CF-4722-AFDA-3BB0EFB75D29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4BE1EEB-84CF-4722-AFDA-3BB0EFB75D29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4BE1EEB-84CF-4722-AFDA-3BB0EFB75D29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EECF6005-9F36-4A66-BEEA-D065DE7B05FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
