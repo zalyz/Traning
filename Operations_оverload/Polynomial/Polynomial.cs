@@ -110,10 +110,11 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
-        //--------------------------------------------------------------------------------------------
-        /*
         public static Polynomial operator /(Polynomial firstPolynomial, Polynomial secondPolynomial)
         {
+            if (secondPolynomial.Coefficient.Where(e => e > 0).Count() > 1)
+                throw new ArgumentException("You can only divide it into monomial.");
+
             if (firstPolynomial.Coefficient.Length < secondPolynomial.Coefficient.Length)
                 throw new ArgumentException("The first polynomial must be larger than the second.");
 
@@ -136,85 +137,7 @@ namespace Polynomial
 
             return new Polynomial(resultСoefficient);
         }
-
-        static Polynomial PolyLongDiv(double[] n, double[] d)
-        {
-            if (n.Length != d.Length)
-            {
-                throw new ArgumentException("Numerator and denominator vectors must have the same size");
-            }
-            int nd = PolyDegree(n);
-            int dd = PolyDegree(d);
-            if (dd < 0)
-            {
-                throw new ArgumentException("Divisor must have at least one one-zero coefficient");
-            }
-            if (nd < dd)
-            {
-                throw new ArgumentException("The degree of the divisor cannot exceed that of the numerator");
-            }
-            double[] n2 = new double[n.Length];
-            n.CopyTo(n2, 0);
-            double[] q = new double[n.Length];
-            while (nd >= dd)
-            {
-                double[] d2 = PolyShiftRight(d, nd - dd);
-                q[nd - dd] = n2[nd] / d2[nd];
-                PolyMultiply(d2, q[nd - dd]);
-                PolySubtract(n2, d2);
-                nd = PolyDegree(n2);
-            }
-            return new Polynomial(q);
-        }
-
-        static double[] PolyShiftRight(double[] p, int places)
-        {
-            if (places <= 0) return p;
-            int pd = PolyDegree(p);
-            if (pd + places >= p.Length)
-            {
-                throw new ArgumentOutOfRangeException("The number of places to be shifted is too large");
-            }
-
-            double[] d = new double[p.Length];
-            p.CopyTo(d, 0);
-            for (int i = pd; i >= 0; --i)
-            {
-                d[i + places] = d[i];
-                d[i] = 0.0;
-            }
-
-            return d;
-        }
-
-        static int PolyDegree(double[] p)
-        {
-            for (int i = p.Length - 1; i >= 0; --i)
-            {
-                if (p[i] != 0.0) return i;
-            }
-
-            return int.MinValue;
-        }
-
-        static void PolyMultiply(double[] p, double m)
-        {
-            for (int i = 0; i < p.Length; ++i)
-            {
-                p[i] *= m;
-            }
-        }
-
-        static void PolySubtract(double[] p, double[] s)
-        {
-            for (int i = 0; i < p.Length; ++i)
-            {
-                p[i] -= s[i];
-            }
-        }
-        */
-        //------------------------------------------------------------------------
-
+        
         public static Polynomial operator /(Polynomial polynomial, int number)
         {
             var resultСoefficient = new int[polynomial.Coefficient.Length];
@@ -269,11 +192,14 @@ namespace Polynomial
                 {
                     if (i > 0)
                     {
-                        outputString.Append(" + ");
-                    }
-                    else
-                    {
-                        outputString.Append(" - ");
+                        if (Coefficient[i] > 0)
+                        {
+                            outputString.Append(" + ");
+                        }
+                        else
+                        {
+                            outputString.Append(" - ");
+                        }
                     }
 
                     outputString.Append(Math.Abs(Coefficient[i]).ToString() + "x^" + (Coefficient.Length - 1 - i));
