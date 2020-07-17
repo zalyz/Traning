@@ -4,15 +4,31 @@ using System.Text;
 
 namespace Polynomial
 {
+    /// <summary>
+    /// Represents the essence of a polynomial.
+    /// </summary>
     public class Polynomial
     {
+        /// <summary>
+        /// Gets or sets the coefficients of the polynomial.
+        /// </summary>
         public int[] Coefficient { get; private set; }
 
+        /// <summary>
+        /// Creates the entity of the polynomial class.
+        /// </summary>
+        /// <param name="correspondingСoefficient"> Сoefficient of the polynomial.</param>
         public Polynomial(params int[] correspondingСoefficient)
         {
             Coefficient = correspondingСoefficient;
         }
 
+        /// <summary>
+        /// Sums two polynomials.
+        /// </summary>
+        /// <param name="firstPolynomial"> The first polynomial for addition.</param>
+        /// <param name="secondPolynomial"> The second polynomial for addition.</param>
+        /// <returns> Result of adding two polynomials.</returns>
         public static Polynomial operator +(Polynomial firstPolynomial, Polynomial secondPolynomial)
         {
             int maxDergee = GetMaxDegree(firstPolynomial, secondPolynomial);
@@ -38,6 +54,12 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
+        /// <summary>
+        /// Sums a polynomial and a number.
+        /// </summary>
+        /// <param name="polynomial"> A polynomial for addition.</param>
+        /// <param name="number"> A number for addition.</param>
+        /// <returns> result of adding a polynomial and a number.</returns>
         public static Polynomial operator +(Polynomial polynomial, int number)
         {
             var resultСoefficient = (int[])polynomial.Coefficient.Clone();
@@ -45,6 +67,12 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
+        /// <summary>
+        /// Finds the difference between two polynomials.
+        /// </summary>
+        /// <param name="firstPolynomial"> The first polynomial for subtraction.</param>
+        /// <param name="secondPolynomial"> The second polynomial for subtraction.</param>
+        /// <returns> Result of subtracting two polynomials.</returns>
         public static Polynomial operator -(Polynomial firstPolynomial, Polynomial secondPolynomial)
         {
             int maxDergee = GetMaxDegree(firstPolynomial, secondPolynomial);
@@ -70,6 +98,12 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
+        /// <summary>
+        /// Finds the difference between polynomial and a number.
+        /// </summary>
+        /// <param name="polynomial"> A polynomial for subtraction.</param>
+        /// <param name="number"> A number for subtraction.</param>
+        /// <returns> Result of subtracting a polynomial and a number.</returns>
         public static Polynomial operator -(Polynomial polynomial, int number)
         {
             var resultСoefficient = (int[])polynomial.Coefficient.Clone();
@@ -77,6 +111,12 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
+        /// <summary>
+        /// Multiplies two polynomials.
+        /// </summary>
+        /// <param name="firstPolynomial"> The first polynomial for multiplication.</param>
+        /// <param name="secondPolynomial"> The second polynomial for multiplication.</param>
+        /// <returns> The result of multiplying two polynomials.</returns>
         public static Polynomial operator *(Polynomial firstPolynomial, Polynomial secondPolynomial)
         {
             var degreeOfResultPolynomial = firstPolynomial.Coefficient.Length + secondPolynomial.Coefficient.Length - 1;
@@ -99,6 +139,12 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
+        /// <summary>
+        /// Multiplies a polynomial and a number.
+        /// </summary>
+        /// <param name="polynomial"> A polynomial for multiplication.</param>
+        /// <param name="number"> A number for multiplication.</param>
+        /// <returns> The result of multiplying a polynomial and a number.</returns>
         public static Polynomial operator *(Polynomial polynomial, int number)
         {
             var resultСoefficient = new int[polynomial.Coefficient.Length];
@@ -110,6 +156,12 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
+        /// <summary>
+        /// Divides the polynomial by the single term.
+        /// </summary>
+        /// <param name="firstPolynomial"> The first polynomial to divide.</param>
+        /// <param name="secondPolynomial"> The second polynomial to divide.</param>
+        /// <returns> Result of dividing two polynomials.</returns>
         public static Polynomial operator /(Polynomial firstPolynomial, Polynomial secondPolynomial)
         {
             if (secondPolynomial.Coefficient.Where(e => e > 0).Count() > 1)
@@ -137,7 +189,13 @@ namespace Polynomial
 
             return new Polynomial(resultСoefficient);
         }
-        
+
+        /// <summary>
+        /// Divides the polynomial by the number.
+        /// </summary>
+        /// <param name="polynomial"> A polynomial to divide.</param>
+        /// <param name="number"> A number to divide.</param>
+        /// <returns> Result of dividing a polynomial and a number.</returns>
         public static Polynomial operator /(Polynomial polynomial, int number)
         {
             var resultСoefficient = new int[polynomial.Coefficient.Length];
@@ -149,6 +207,11 @@ namespace Polynomial
             return new Polynomial(resultСoefficient);
         }
 
+        /// <summary>
+        /// Create zero array for new coefficients.
+        /// </summary>
+        /// <param name="sizeOfArray"> Size of zero array.</param>
+        /// <returns> An array containing the zeros.</returns>
         private static int[] CreateZeroArray(int sizeOfArray)
         {
             var zeroArray = new int[sizeOfArray];
@@ -161,6 +224,12 @@ namespace Polynomial
             return zeroArray;
         }
 
+        /// <summary>
+        /// Gets max degree of two polynomials.
+        /// </summary>
+        /// <param name="firstPolynomial"> The first polynomial to calculat.</param>
+        /// <param name="secondPolynomial"> The second polynomial to calculat.</param>
+        /// <returns> Max degree of two polynomials.</returns>
         private static int GetMaxDegree(Polynomial firstPolynomial, Polynomial secondPolynomial)
         {
             if (firstPolynomial.Coefficient.Length >= secondPolynomial.Coefficient.Length)
@@ -173,16 +242,19 @@ namespace Polynomial
             }
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             return obj is Polynomial polynomial && Equals(this.ToString(), polynomial.ToString());
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return HashCode.Combine(Coefficient);
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             var outputString = new StringBuilder();

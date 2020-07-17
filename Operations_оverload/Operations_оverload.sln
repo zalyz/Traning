@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PolynomialTests", "Polynomi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop", "Shop\Shop.csproj", "{2A77D0D8-AEF6-40FA-91EC-7F346DB32F8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTests", "ShopTests\ShopTests.csproj", "{C1CB0B47-5028-466D-AF14-1427CD00C749}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopTests", "ShopTests\ShopTests.csproj", "{C1CB0B47-5028-466D-AF14-1427CD00C749}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
