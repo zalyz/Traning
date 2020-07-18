@@ -8,4 +8,8 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="DataReading\" />
+  </ItemGroup>
+
 </Project>

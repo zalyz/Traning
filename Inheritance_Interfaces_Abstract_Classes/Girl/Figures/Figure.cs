@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Girl.Figures
 {
-    enum FigureColor
+    public enum FigureColor
     {
         Transparent,
         White,
@@ -14,7 +14,7 @@ namespace Girl.Figures
         Green
     }
 
-    enum FigureMaterial
+    public enum FigureMaterial
     {
         Film = 1,
         Paper = 2
@@ -22,15 +22,26 @@ namespace Girl.Figures
 
     public abstract class Figure
     {
-        private bool _isPaintable;
-
         public abstract double[] SidesLength { get; }
 
         public FigureColor Color { get; private set; }
 
-        public virtual void PaintFigureIn(FigureColor color)
+        public Figure(FigureMaterial figureMaterial)
         {
-            if (_isPaintable && (Color == FigureColor.White))
+            if (figureMaterial == FigureMaterial.Film)
+            {
+                Color = FigureColor.Transparent;
+            }
+        }
+
+        public Figure(Figure figure)
+        {
+            Color = figure.Color;
+        }
+
+        public void PaintFigureTo(FigureColor color)
+        {
+            if ((Color != FigureColor.Transparent) && (Color == FigureColor.White))
             {
                 Color = color;
             }
@@ -38,8 +49,8 @@ namespace Girl.Figures
                 throw new Exception();
         }
 
-        public abstract double GetArea();
+        public abstract double Area();
 
-        public abstract double GetPerimeter();
+        public abstract double Perimeter();
     }
 }
