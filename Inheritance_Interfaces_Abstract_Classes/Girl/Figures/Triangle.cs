@@ -30,7 +30,7 @@ namespace Girl.Figures
             }
             else
             {
-                throw new Exception();
+                throw new ArgumentException("Can't cut a Triangle with these parameters.");
             }
         }
 
@@ -49,15 +49,19 @@ namespace Girl.Figures
 
         public override bool Equals(object obj)
         {
-            return obj is Triangle triangle &&
-                  Color == triangle.Color &&
-                  SidesLength.OrderBy(e => e).SequenceEqual(
+            return Equals(obj as Triangle);
+        }
+
+        public bool Equals(Triangle triangle)
+        {
+            return Color == triangle.Color &&
+                SidesLength.OrderBy(e => e).SequenceEqual(
                       triangle.SidesLength.OrderBy(e => e));
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(SidesLength);
+            return (Color, SidesLength[0], SidesLength[1], SidesLength[2]).GetHashCode();
         }
 
         public override string ToString()

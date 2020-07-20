@@ -23,7 +23,7 @@ namespace Girl.Figures
             }
             else
             {
-                throw new Exception();
+                throw new ArgumentException("Can't cut a Circle with these parameters.");
             }
         }
 
@@ -39,15 +39,19 @@ namespace Girl.Figures
 
         public override bool Equals(object obj)
         {
-            return obj is Circle circle &&
-                  Color == circle.Color &&
-                  SidesLength.OrderBy(e => e).SequenceEqual(
+            return Equals(obj as Circle);
+        }
+
+        public bool Equals(Circle circle)
+        {
+            return Color == circle.Color &&
+                SidesLength.OrderBy(e => e).SequenceEqual(
                       circle.SidesLength.OrderBy(e => e));
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(SidesLength);
+            return (Color, SidesLength[0]).GetHashCode();
         }
 
         public override string ToString()
