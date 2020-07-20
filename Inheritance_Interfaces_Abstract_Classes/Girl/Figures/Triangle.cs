@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Girl.Figures
 {
-    class Triangle : Figure
+    public class Triangle : Figure
     {
         public override double[] SidesLength { get; } = new double[3];
 

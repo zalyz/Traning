@@ -9,7 +9,7 @@ namespace Girl.Figures
     {
         public override double[] SidesLength { get; } = new double[1];
 
-        public Circle(FigureMaterial figureMaterial, int radius) : base(figureMaterial)
+        public Circle(FigureMaterial figureMaterial, double radius) : base(figureMaterial)
         {
             SidesLength[0] = radius;
         }

@@ -20,6 +20,7 @@ namespace Girl.Figures
         Paper = 2
     }
 
+    [Serializable]
     public abstract class Figure
     {
         public abstract double[] SidesLength { get; }
@@ -31,6 +32,10 @@ namespace Girl.Figures
             if (figureMaterial == FigureMaterial.Film)
             {
                 Color = FigureColor.Transparent;
+            }
+            else
+            {
+                Color = FigureColor.White;
             }
         }
 
