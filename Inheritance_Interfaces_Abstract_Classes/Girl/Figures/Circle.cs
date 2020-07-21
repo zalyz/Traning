@@ -14,11 +14,11 @@ namespace Girl.Figures
             SidesLength[0] = radius;
         }
 
-        public Circle(Figure figure, double area) : base(figure)
+        public Circle(Figure figure, double radius) : base(figure)
         {
-            if (area < figure.Area())
+            var arearOfNewCircle = Math.PI * Math.Pow(radius, 2);
+            if (arearOfNewCircle < figure.Area())
             {
-                var radius = Math.Sqrt((area / Math.PI));
                 SidesLength[0] = radius;
             }
             else
@@ -44,7 +44,8 @@ namespace Girl.Figures
 
         public bool Equals(Circle circle)
         {
-            return Color == circle.Color &&
+            return circle != null &&
+                Color == circle.Color &&
                 SidesLength.OrderBy(e => e).SequenceEqual(
                       circle.SidesLength.OrderBy(e => e));
         }

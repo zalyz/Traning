@@ -54,7 +54,8 @@ namespace Girl.Figures
 
         public bool Equals(Triangle triangle)
         {
-            return Color == triangle.Color &&
+            return triangle != null &&
+                Color == triangle.Color &&
                 SidesLength.OrderBy(e => e).SequenceEqual(
                       triangle.SidesLength.OrderBy(e => e));
         }

@@ -51,7 +51,7 @@ namespace Girl.Figures
                 Color = color;
             }
             else
-                throw new Exception();
+                throw new ArgumentException("Can't paint film figure.");
         }
 
         public abstract double Area();

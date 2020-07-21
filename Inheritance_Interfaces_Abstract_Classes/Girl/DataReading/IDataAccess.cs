@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Girl.DataReading
 {
-    interface IDataAccess<T> where T : class
+    public interface IDataAccess<T> where T : class
     {
         public T[] ReadData(string path);
 

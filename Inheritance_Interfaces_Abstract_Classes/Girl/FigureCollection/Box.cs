@@ -1,12 +1,12 @@
 ﻿using Girl.Figures;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using Girl.DataReading;
 using System.Text;
 
 namespace Girl.FigureCollection
 {
-    class Box
+    public class Box
     {
         private Figure[] _figures = new Figure[0];
 
@@ -40,11 +40,11 @@ namespace Girl.FigureCollection
             _figures[index] = figure;
         }
 
-        public Figure Find(Figure simple)
+        public Figure Find(Figure sample)
         {
             foreach (var figure in _figures)
             {
-                if (figure.Equals(simple))
+                if (figure.Equals(sample))
                 {
                     return figure;
                 }
@@ -58,7 +58,7 @@ namespace Girl.FigureCollection
             return _figures.Length;
         }
 
-        public double TotalArear()
+        public double TotalArea()
         {
             double sumOfArea = 0;
             foreach (var figure in _figures)
@@ -190,6 +190,22 @@ namespace Girl.FigureCollection
             }
 
             _figures = updatedArray;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Box);
+        }
+        
+        public bool Equals(Box box)
+        {
+            return box != null &&
+                box._figures.SequenceEqual(_figures);
+        }
+
+        public override int GetHashCode()
+        {
+            return (_figures).GetHashCode();
         }
     }
 }
