@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
-using System.Linq;
 
 namespace Girl.DataReading
 {
@@ -32,6 +31,11 @@ namespace Girl.DataReading
                                 var triangleInformation = GetInformation(xmlReader);
                                 Array.Resize(ref arrayOfFigures, arrayOfFigures.Length + 1);
                                 arrayOfFigures[^1] = GetTriangle(triangleInformation);
+                                break;
+                            case "Rectangle":
+                                var rectangleInformation = GetInformation(xmlReader);
+                                Array.Resize(ref arrayOfFigures, arrayOfFigures.Length + 1);
+                                arrayOfFigures[^1] = GetRectangle(rectangleInformation);
                                 break;
                             default:
                                 break;
@@ -75,6 +79,22 @@ namespace Girl.DataReading
             }
         }
 
+        private Rectangle GetRectangle((string sides, string color) info)
+        {
+            double[] sidesLength = GetArrayOfSidesLength(info);
+            var color = GetColor(info);
+            if (color == FigureColor.Transparent)
+            {
+                return new Rectangle(FigureMaterial.Film, sidesLength[0], sidesLength[1]);
+            }
+            else
+            {
+                var circle = new Rectangle(FigureMaterial.Paper, sidesLength[0], sidesLength[1]);
+                circle.PaintFigureTo(color);
+                return circle;
+            }
+        }
+
         private double[] GetArrayOfSidesLength((string sides, string color) info)
         {
             var splitedSides = info.sides.Split(' ');
@@ -111,8 +131,10 @@ namespace Girl.DataReading
 
         private (string sides, string color) GetInformation(XmlReader xmlReader)
         {
-            var sidesLength = xmlReader.GetAttribute("SideLength");
-            var color = xmlReader.GetAttribute("Color");
+            xmlReader.MoveToContent();
+            xmlReader.ReadToDescendant("SidesLength");
+            var sidesLength = xmlReader.ReadElementContentAsString();
+            var color = xmlReader.ReadElementContentAsString();
             return (sidesLength, color);
         }
 
@@ -143,7 +165,7 @@ namespace Girl.DataReading
                         xmlWriter.WriteStartElement("Rectangle");
                     }
 
-                    xmlWriter.WriteElementString("SideLength", sidesInStringFormat);
+                    xmlWriter.WriteElementString("SidesLength", sidesInStringFormat);
 
                     xmlWriter.WriteElementString("Color", item.Color.ToString());
 
@@ -157,13 +179,13 @@ namespace Girl.DataReading
 
         }
 
-        private string SidesLengthToStringFormat(Figure item)
+        private string SidesLengthToStringFormat(Figure figure)
         {
             var sidesStringFormat = new StringBuilder();
-            for (int i = 0; i < item.SidesLength.Length; i++)
+            for (int i = 0; i < figure.SidesLength.Length; i++)
             {
-                sidesStringFormat.Append(item.SidesLength[i]);
-                if (i < item.SidesLength.Length - 1)
+                sidesStringFormat.Append(figure.SidesLength[i]);
+                if (i < figure.SidesLength.Length - 1)
                 {
                     sidesStringFormat.Append(" ");
                 }
