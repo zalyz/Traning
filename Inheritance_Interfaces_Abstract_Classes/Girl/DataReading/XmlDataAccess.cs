@@ -1,14 +1,17 @@
 ﻿using Girl.Figures;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 
 namespace Girl.DataReading
 {
+    /// <summary>
+    /// Allows reading and writing xml files by XmlRader or XmlWriter.
+    /// </summary>
     public class XmlDataAccess : IDataAccess<Figure>
     {
+        /// <inheritdoc/>
         public Figure[] ReadData(string path)
         {
             var arrayOfFigures = new Figure[0];
@@ -47,10 +50,15 @@ namespace Girl.DataReading
             return arrayOfFigures;
         }
 
+        /// <summary>
+        /// Creates instance of Circle class.
+        /// </summary>
+        /// <param name="info"> Set of information about sides length and figure color.</param>
+        /// <returns> Instance of Circle class.</returns>
         private Circle GetCircle((string sides, string color) info)
         {
-            double[] sidesLength = GetArrayOfSidesLength(info);
-            var color = GetColor(info);
+            double[] sidesLength = GetArrayOfSidesLength(info.sides);
+            var color = GetColor(info.color);
             if (color == FigureColor.Transparent)
             {
                 return new Circle(FigureMaterial.Film, sidesLength[0]);
@@ -63,10 +71,15 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Creates instance of Triangle class.
+        /// </summary>
+        /// <param name="info"> Set of information about sides length and figure color.</param>
+        /// <returns> Instance of Triangle class.</returns>
         private Triangle GetTriangle((string sides, string color) info)
         {
-            double[] sidesLength = GetArrayOfSidesLength(info);
-            var color = GetColor(info);
+            double[] sidesLength = GetArrayOfSidesLength(info.sides);
+            var color = GetColor(info.color);
             if (color == FigureColor.Transparent)
             {
                 return new Triangle(FigureMaterial.Film, sidesLength[0], sidesLength[1], sidesLength[2]);
@@ -79,10 +92,15 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Creates instance of Rectangle class.
+        /// </summary>
+        /// <param name="info"> Set of information about sides length and figure color.</param>
+        /// <returns> Instance of Rectangle class.</returns>
         private Rectangle GetRectangle((string sides, string color) info)
         {
-            double[] sidesLength = GetArrayOfSidesLength(info);
-            var color = GetColor(info);
+            double[] sidesLength = GetArrayOfSidesLength(info.sides);
+            var color = GetColor(info.color);
             if (color == FigureColor.Transparent)
             {
                 return new Rectangle(FigureMaterial.Film, sidesLength[0], sidesLength[1]);
@@ -95,9 +113,14 @@ namespace Girl.DataReading
             }
         }
 
-        private double[] GetArrayOfSidesLength((string sides, string color) info)
+        /// <summary>
+        /// Transforms string represent of sides length to array.
+        /// </summary>
+        /// <param name="sides"> Sides length in string form.</param>
+        /// <returns> Array of sides length of figure.</returns>
+        private double[] GetArrayOfSidesLength(string sides)
         {
-            var splitedSides = info.sides.Split(' ');
+            var splitedSides = sides.Split(' ');
             double[] sidesLength = new double[splitedSides.Length];
 
             for (int i = 0; i < sidesLength.Length; i++)
@@ -108,9 +131,14 @@ namespace Girl.DataReading
             return sidesLength;
         }
 
-        private FigureColor GetColor((string sides, string color) info)
+        /// <summary>
+        /// Gets color by his string form.
+        /// </summary>
+        /// <param name="color"> String form of Color.</param>
+        /// <returns> Color of figure.</returns>
+        private FigureColor GetColor(string color)
         {
-            switch (info.color)
+            switch (color)
             {
                 case "Transparent":
                     return FigureColor.Transparent;
@@ -129,6 +157,11 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Gets information about figure from file.
+        /// </summary>
+        /// <param name="xmlReader"> Reader for Xml file.</param>
+        /// <returns> Set of information about figure.</returns>
         private (string sides, string color) GetInformation(XmlReader xmlReader)
         {
             xmlReader.MoveToContent();
@@ -138,6 +171,7 @@ namespace Girl.DataReading
             return (sidesLength, color);
         }
 
+        /// <inheritdoc/>
         public void WriteData(Figure[] source, string path)
         {
             using (var xmlWriter = XmlWriter.Create(path))
@@ -148,7 +182,7 @@ namespace Girl.DataReading
 
                 foreach (var item in source)
                 {
-                    string sidesInStringFormat = SidesLengthToStringFormat(item);
+                    string sidesInStringFormat = SidesLengthToStringFormat(item.SidesLength);
 
                     if (item is Circle)
                     {
@@ -179,13 +213,18 @@ namespace Girl.DataReading
 
         }
 
-        private string SidesLengthToStringFormat(Figure figure)
+        /// <summary>
+        /// Transforms Sides length to string form.
+        /// </summary>
+        /// <param name="sides"> Figure sides.</param>
+        /// <returns> Sides length in string form.</returns>
+        private string SidesLengthToStringFormat(double[] sides)
         {
             var sidesStringFormat = new StringBuilder();
-            for (int i = 0; i < figure.SidesLength.Length; i++)
+            for (int i = 0; i < sides.Length; i++)
             {
-                sidesStringFormat.Append(figure.SidesLength[i]);
-                if (i < figure.SidesLength.Length - 1)
+                sidesStringFormat.Append(sides[i]);
+                if (i < sides.Length - 1)
                 {
                     sidesStringFormat.Append(" ");
                 }

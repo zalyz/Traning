@@ -1,14 +1,17 @@
 ﻿using Girl.Figures;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
 
 namespace Girl.DataReading
 {
+    /// <summary>
+    /// Allows reading and writing xml files by StreamRader or StreamWriter.
+    /// </summary>
     public class StreamDataAccess : IDataAccess<Figure>
     {
+        /// <inheritdoc/>
         public Figure[] ReadData(string path)
         {
             var arrayOfFigures = new Figure[0];
@@ -30,6 +33,13 @@ namespace Girl.DataReading
             return arrayOfFigures;
         }
 
+        /// <summary>
+        /// Inserts figure from file to array.
+        /// </summary>
+        /// <param name="arrayOfFigures"> Array of figures from file.</param>
+        /// <param name="xNode"> File reader.</param>
+        /// <param name="sidesLength"> Length of figures sides.</param>
+        /// <param name="figureColor"> Figure color.</param>
         private void InsetFigureInArray(Figure[] arrayOfFigures, XmlNode xNode, double[] sidesLength, FigureColor figureColor)
         {
             switch (xNode.Name)
@@ -48,6 +58,12 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Reads sides length and color of figure from file.
+        /// </summary>
+        /// <param name="xNode"> File reader.</param>
+        /// <param name="sidesLength"> Sides length of figure.</param>
+        /// <param name="figureColor"> Figure color.</param>
         private void ReadingFieldsOfFigure(XmlNode xNode, ref double[] sidesLength, ref FigureColor figureColor)
         {
             foreach (XmlNode item in xNode.ChildNodes)
@@ -64,6 +80,12 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Gets instance of Circle class.
+        /// </summary>
+        /// <param name="sides"> Figure sides.</param>
+        /// <param name="color"> Figure color.</param>
+        /// <returns> Instance of Circle class.</returns>
         private Circle GetCircle(double[] sides, FigureColor color)
         {
             if (color == FigureColor.Transparent)
@@ -78,6 +100,12 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Gets instance of Triangle class.
+        /// </summary>
+        /// <param name="sides"> Figure sides.</param>
+        /// <param name="color"> Figure color.</param>
+        /// <returns> Instance of Triangle class.</returns>
         private Triangle GetTriangle(double[] sides, FigureColor color)
         {
             if (color == FigureColor.Transparent)
@@ -92,6 +120,12 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Gets instance of Rectangle class.
+        /// </summary>
+        /// <param name="sides"> Figure sides.</param>
+        /// <param name="color"> Figure color.</param>
+        /// <returns> Instance of Rectangle class.</returns>
         private Rectangle GetRectangle(double[] sides, FigureColor color)
         {
             if (color == FigureColor.Transparent)
@@ -106,9 +140,14 @@ namespace Girl.DataReading
             }
         }
 
-        private double[] GetArrayOfSidesLength(string sidesLengthInStringFormat)
+        /// <summary>
+        /// Gets array of sides length.
+        /// </summary>
+        /// <param name="sidesLengthInStringFormat"> Sides length in string form.</param>
+        /// <returns> Array of sides length.</returns>
+        private double[] GetArrayOfSidesLength(string sidesLengthInStringForm)
         {
-            var splitedSides = sidesLengthInStringFormat.Split(' ');
+            var splitedSides = sidesLengthInStringForm.Split(' ');
             double[] sidesLength = new double[splitedSides.Length];
 
             for (int i = 0; i < sidesLength.Length; i++)
@@ -119,6 +158,11 @@ namespace Girl.DataReading
             return sidesLength;
         }
 
+        /// <summary>
+        /// Gets figure color.
+        /// </summary>
+        /// <param name="color"> Color in string for.</param>
+        /// <returns> Figure color.</returns>
         private FigureColor GetColor(string color)
         {
             switch (color)
@@ -140,6 +184,7 @@ namespace Girl.DataReading
             }
         }
 
+        /// <inheritdoc/>
         public void WriteData(Figure[] source, string path)
         {
             using (var writer = new StreamWriter(path))
@@ -160,6 +205,11 @@ namespace Girl.DataReading
             }
         }
 
+        /// <summary>
+        /// Gets name of figure in string form.
+        /// </summary>
+        /// <param name="figure"> Essence of the geometric figure.</param>
+        /// <returns> Name in string form</returns>
         private static string GetTypeOfFigure(Figure figure)
         {
             if (figure is Circle)
@@ -183,14 +233,24 @@ namespace Girl.DataReading
             throw new ArgumentException(nameof(Figure) + "is not valid.");
         }
 
+        /// <summary>
+        /// Writes sides length to file.
+        /// </summary>
+        /// <param name="figure"> Figure whith sides.</param>
+        /// <param name="stream"> File writer.</param>
         private void WriteSidesLengthToFile(Figure figure, StreamWriter stream)
         {
-            var sidesLengthInStringFormat = SidesLengthToStringFormat(figure);
+            var sidesLengthInStringFormat = SidesLengthToStringForm(figure);
             stream.Write("<SidesLength>");
             stream.Write(sidesLengthInStringFormat);
             stream.Write("</SidesLength>");
         }
 
+        /// <summary>
+        /// Writes color to file.
+        /// </summary>
+        /// <param name="figure"> Figure whith color.</param>
+        /// <param name="stream"> File writer.</param>
         private void WriteColorToFile(Figure figure, StreamWriter stream)
         {
             stream.Write("<Color>");
@@ -198,7 +258,12 @@ namespace Girl.DataReading
             stream.Write("</Color>");
         }
 
-        private string SidesLengthToStringFormat(Figure figure)
+        /// <summary>
+        /// Transform array of sides to string form.
+        /// </summary>
+        /// <param name="figure"> Figure whith sides.</param>
+        /// <returns> String form of sides length.</returns>
+        private string SidesLengthToStringForm(Figure figure)
         {
             var sidesStringFormat = new StringBuilder();
             for (int i = 0; i < figure.SidesLength.Length; i++)
