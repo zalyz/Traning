@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TcpIpClient.MessageDisplay;
 
 namespace TcpIpClient.TransformStrings
 {
     class EngConverter : ILanguageConverter
     {
-        public string ConvertString(string message)
+        public void ConvertString(IDisplay<string> display, string message)
         {
             var resultString = new StringBuilder();
             foreach (var character in message.ToUpper())
             {
+                // If character less then or equal to 122, character is english letter.
+                if (character <= 122)
+                    display.Show(message);
+
                 var engCharacter = GetEnglishCharacter(character);
                 resultString.Append(engCharacter);
             }
 
-            return resultString.ToString();
+            display.Show(resultString.ToString());
         }
 
         private string GetEnglishCharacter(char character)

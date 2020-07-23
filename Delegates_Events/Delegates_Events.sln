@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{5C5A6381-937F-4463-874B-8053FD91BC13}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{75269F89-5492-42C5-B96A-CA39F9610F63}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpIpClient", "TcpClient\TcpIpClient.csproj", "{FE379585-8E32-49F3-92FE-17B18F26E511}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpIpServer", "TcpIpServer\TcpIpServer.csproj", "{CAD2E633-B0DC-47CD-952F-6BFEDCFD62B5}"
@@ -17,14 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C5A6381-937F-4463-874B-8053FD91BC13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C5A6381-937F-4463-874B-8053FD91BC13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C5A6381-937F-4463-874B-8053FD91BC13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C5A6381-937F-4463-874B-8053FD91BC13}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75269F89-5492-42C5-B96A-CA39F9610F63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75269F89-5492-42C5-B96A-CA39F9610F63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75269F89-5492-42C5-B96A-CA39F9610F63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75269F89-5492-42C5-B96A-CA39F9610F63}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FE379585-8E32-49F3-92FE-17B18F26E511}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FE379585-8E32-49F3-92FE-17B18F26E511}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE379585-8E32-49F3-92FE-17B18F26E511}.Release|Any CPU.ActiveCfg = Release|Any CPU

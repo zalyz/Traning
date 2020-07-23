@@ -1,21 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TcpIpClient.MessageDisplay;
 
 namespace TcpIpClient.TransformStrings
 {
     class RusConverter : ILanguageConverter
     {
-        public string ConvertString(string message)
+        public void ConvertString(IDisplay<string> display, string message)
         {
             var resultString = new StringBuilder();
             foreach (var character in message.ToUpper())
             {
+                // If character more then or equal to 192, character is russian letter.
+                if (character >= 192)
+                    display.Show(message);
+
                 var rusCharacter = GetRusCharacter(character);
                 resultString.Append(rusCharacter);
             }
 
-            return resultString.ToString();
+            display.Show(resultString.ToString());
         }
 
         private string GetRusCharacter(char character)

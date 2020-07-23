@@ -7,7 +7,7 @@ namespace TcpIpClient
 {
     class Client
     {
-        private event Func<string, string> _observers;
+        private event Action<string> _observers;
 
         private TcpClient TcpClient;
 
@@ -37,6 +37,8 @@ namespace TcpIpClient
             Int32 bytes = stream.Read(data, 0, data.Length);
             responseData = Encoding.UTF8.GetString(data, 0, bytes);
 
+            _observers.Invoke(responseData);
+
             return responseData;
         }
 
@@ -46,14 +48,14 @@ namespace TcpIpClient
             TcpClient.Close();
         }
 
-        public void Subscribe(Func<string, string> func)
+        public void Subscribe(Action<string> func)
         {
-
+            _observers += func;
         }
 
-        public void Unsubscribe(Func<string, string> func)
+        public void Unsubscribe(Action<string> func)
         {
-
+            _observers -= func;
         }
     }
 }
