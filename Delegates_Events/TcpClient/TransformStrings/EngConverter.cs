@@ -1,20 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using TcpIpClient.MessageDisplay;
 
 namespace TcpIpClient.TransformStrings
 {
-    class EngConverter : ILanguageConverter
+    /// <summary>
+    /// Translate russian string to english language.
+    /// </summary>
+    public class EngConverter : ILanguageConverter
     {
+        /// <inheritdoc/>
         public void ConvertString(IDisplay<string> display, string message)
         {
             var resultString = new StringBuilder();
-            foreach (var character in message.ToUpper())
+            foreach (var character in message.ToLower())
             {
                 // If character less then or equal to 122, character is english letter.
                 if (character <= 122)
+                {
                     display.Show(message);
+                    return;
+                }
 
                 var engCharacter = GetEnglishCharacter(character);
                 resultString.Append(engCharacter);
@@ -23,6 +28,11 @@ namespace TcpIpClient.TransformStrings
             display.Show(resultString.ToString());
         }
 
+        /// <summary>
+        /// Translate each english letter to russian letter.
+        /// </summary>
+        /// <param name="character"> English letter to translate.</param>
+        /// <returns> Russian latter.</returns>
         private string GetEnglishCharacter(char character)
         {
             return character switch

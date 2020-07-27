@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpIpClient", "TcpClient\TcpIpClient.csproj", "{FE379585-8E32-49F3-92FE-17B18F26E511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpIpClient", "TcpClient\TcpIpClient.csproj", "{FE379585-8E32-49F3-92FE-17B18F26E511}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpIpServer", "TcpIpServer\TcpIpServer.csproj", "{CAD2E633-B0DC-47CD-952F-6BFEDCFD62B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpIpServer", "TcpIpServer\TcpIpServer.csproj", "{CAD2E633-B0DC-47CD-952F-6BFEDCFD62B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpIpServerTests", "TcpIpServerTests\TcpIpServerTests.csproj", "{B63D4FFA-A230-43CE-9B02-3A603B856843}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TcpIpClientTests", "TcpIpClientTests\TcpIpClientTests.csproj", "{C2B002E7-CF16-47DB-8FB3-B69180DD8EE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{CAD2E633-B0DC-47CD-952F-6BFEDCFD62B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAD2E633-B0DC-47CD-952F-6BFEDCFD62B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAD2E633-B0DC-47CD-952F-6BFEDCFD62B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B63D4FFA-A230-43CE-9B02-3A603B856843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B63D4FFA-A230-43CE-9B02-3A603B856843}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B63D4FFA-A230-43CE-9B02-3A603B856843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B63D4FFA-A230-43CE-9B02-3A603B856843}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B002E7-CF16-47DB-8FB3-B69180DD8EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B002E7-CF16-47DB-8FB3-B69180DD8EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B002E7-CF16-47DB-8FB3-B69180DD8EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B002E7-CF16-47DB-8FB3-B69180DD8EE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,54 +5,82 @@ using System.Text;
 
 namespace TcpIpClient
 {
-    class Client
+    /// <summary>
+    /// Class representing the TcpIp connection client.
+    /// </summary>
+    public class Client
     {
+        /// <summary>
+        /// Contains all observers of this client.
+        /// </summary>
         private event Action<string> _observers;
 
-        private TcpClient TcpClient;
+        /// <summary>
+        /// Instance of TcpClient class for convenient handling.
+        /// </summary>
+        private readonly TcpClient _tcpClient;
 
-        private Stream stream;
+        /// <summary>
+        /// Instance of Stream class for convenient handling.
+        /// </summary>
+        private readonly Stream stream;
 
+        /// <summary>
+        /// Constructor for creating an instance of the client class.
+        /// </summary>
+        /// <param name="ip"> IP of connection.</param>
+        /// <param name="port"> Port of connection.</param>
         public Client(string ip, int port = 13000)
         {
-            TcpClient = new TcpClient(ip, port);
-            stream = TcpClient.GetStream();
+            _tcpClient = new TcpClient(ip, port);
+            stream = _tcpClient.GetStream();
         }
 
+        /// <summary>
+        /// Sends message to server.
+        /// </summary>
+        /// <param name="message"> Message for the server.</param>
         public void SendMessage(string message)
         {
-            Byte[] data = Encoding.UTF8.GetBytes(message);
+            byte[] data = Encoding.UTF8.GetBytes(message);
             stream.Write(data, 0, data.Length);
         }
 
+        /// <summary>
+        /// Returns responce from server on you message.
+        /// </summary>
+        /// <returns> Message from the server.</returns>
         public string ResponseFromServer()
         {
-            // Buffer to store the response bytes.
-            Byte[] data = new Byte[256];
-
-            // String to store the response ASCII representation.
-            String responseData = String.Empty;
-
-            // Read the first batch of the TcpServer response bytes.
-            Int32 bytes = stream.Read(data, 0, data.Length);
-            responseData = Encoding.UTF8.GetString(data, 0, bytes);
-
-            _observers.Invoke(responseData);
-
+            var data = new byte[256];
+            var bytes = stream.Read(data, 0, data.Length);
+            string responseData = Encoding.UTF8.GetString(data, 0, bytes);
+            _observers?.Invoke(responseData);
             return responseData;
         }
 
+        /// <summary>
+        /// Closes client connection.
+        /// </summary>
         public void Close()
         {
             stream.Close();
-            TcpClient.Close();
+            _tcpClient.Close();
         }
 
+        /// <summary>
+        /// Adds a translator for a message from the server.
+        /// </summary>
+        /// <param name="func"> Function that translate a message.</param>
         public void Subscribe(Action<string> func)
         {
             _observers += func;
         }
 
+        /// <summary>
+        /// Remove a translator for a message from the server
+        /// </summary>
+        /// <param name="func"> Function that translate a message.</param>
         public void Unsubscribe(Action<string> func)
         {
             _observers -= func;
