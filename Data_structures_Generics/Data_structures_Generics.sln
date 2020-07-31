@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryTree", "BinaryTree\BinaryTree.csproj", "{6EA0D67C-DC2B-40FC-926C-96C4ADD39B9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryTree", "BinaryTree\BinaryTree.csproj", "{6EA0D67C-DC2B-40FC-926C-96C4ADD39B9A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerializableContainerTests", "SerializableContainerTests\SerializableContainerTests.csproj", "{1DAFD982-E223-4FED-B3A2-67EB1CFF0040}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializableContainer", "SerializableContainer\SerializableContainer.csproj", "{EB7840C4-AE9A-4F62-88EF-EAFD1FE81431}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{6EA0D67C-DC2B-40FC-926C-96C4ADD39B9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6EA0D67C-DC2B-40FC-926C-96C4ADD39B9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EA0D67C-DC2B-40FC-926C-96C4ADD39B9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DAFD982-E223-4FED-B3A2-67EB1CFF0040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DAFD982-E223-4FED-B3A2-67EB1CFF0040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DAFD982-E223-4FED-B3A2-67EB1CFF0040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DAFD982-E223-4FED-B3A2-67EB1CFF0040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB7840C4-AE9A-4F62-88EF-EAFD1FE81431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB7840C4-AE9A-4F62-88EF-EAFD1FE81431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB7840C4-AE9A-4F62-88EF-EAFD1FE81431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB7840C4-AE9A-4F62-88EF-EAFD1FE81431}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

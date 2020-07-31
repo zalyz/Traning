@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Xml.Serialization;
+using System.Collections.Generic;
+using System.IO;
 
 namespace BinaryTree
 {
@@ -44,6 +47,52 @@ namespace BinaryTree
             oldRoot.Left = newRoot.Right;
             newRoot.Right = oldRoot;
             _root = newRoot;
+        }
+
+        public void WriteToXml(string path)
+        {
+            List<T> listOfNodes = new List<T>();
+            ConvertTreeToList(_root, listOfNodes);
+            var xmlFormatter = new XmlSerializer(typeof(List<T>));
+            using (var writer = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                xmlFormatter.Serialize(writer, listOfNodes);
+
+            }
+        }
+
+        public void ReadFromXml(string path)
+        {
+            List<T> listOfNodes;
+            var xmlFormatter = new XmlSerializer(typeof(List<T>));
+            using (var reader = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                listOfNodes = (List<T>)xmlFormatter.Deserialize(reader);
+
+            }
+
+            _root = null;
+            CreateTreeFromList(listOfNodes);
+        }
+
+        private void CreateTreeFromList(List<T> list)
+        {
+            foreach (var item in list)
+            {
+                Add(item);
+            }
+        }
+
+        private void ConvertTreeToList(Node node, List<T> list)
+        {
+            if (node != null)
+            {
+                list.Add(node.Value);
+                ConvertTreeToList(node.Left, list);
+
+
+                ConvertTreeToList(node.Right, list);
+            }
         }
 
         private class Node
