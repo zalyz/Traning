@@ -31,22 +31,9 @@ namespace BinaryTree
             nextNode = new Node(record) { Left = null, Right = null };
         }
 
-        public void LeftTurn()
+        public void TreeBalancing()
         {
-            var oldRoot = _root;
-            var newRoot = _root.Right;
-            oldRoot.Right = newRoot.Left;
-            newRoot.Left = oldRoot;
-            _root = newRoot;
-        }
-
-        public void RightTurn()
-        {
-            var oldRoot = _root;
-            var newRoot = _root.Left;
-            oldRoot.Left = newRoot.Right;
-            newRoot.Right = oldRoot;
-            _root = newRoot;
+            TreeBalancing(ref _root);
         }
 
         public void WriteToXml(string path)
@@ -93,6 +80,70 @@ namespace BinaryTree
 
                 ConvertTreeToList(node.Right, list);
             }
+        }
+
+        private void LeftTurn(ref Node node)
+        {
+            var oldRoot = node;
+            var newRoot = node.Right;
+            oldRoot.Right = newRoot.Left;
+            newRoot.Left = oldRoot;
+            node = newRoot;
+        }
+
+        private void RightTurn(ref Node node)
+        {
+            var oldRoot = node;
+            var newRoot = node.Left;
+            oldRoot.Left = newRoot.Right;
+            newRoot.Right = oldRoot;
+            node = newRoot;
+        }
+
+        private void TreeBalancing(ref Node node)
+        {
+            if (node != null)
+            {
+                TreeBalancing(ref node.Left);
+                if (node != _root)
+                {
+                    node = IsBal(node);
+                }
+
+                TreeBalancing(ref node.Right);
+
+                if (node == _root)
+                {
+                    node = IsBal(node);
+                }
+            }
+        }
+
+        private Node IsBal(Node node)
+        {
+            var leftHeight = GetHeight(node.Left);
+            var rightHeight = GetHeight(node.Right);
+            if (Math.Abs(leftHeight - rightHeight) >= 2)
+            {
+                if (leftHeight > rightHeight)
+                {
+                    RightTurn(ref node);
+                }
+                else
+                {
+                    LeftTurn(ref node);
+                }
+            }
+
+            return node;
+        }
+
+        private int GetHeight(Node node)
+        {
+            if (node == null)
+                return 0;
+
+            return 1 + Math.Max(GetHeight(node.Left), GetHeight(node.Right)); 
         }
 
         private class Node
