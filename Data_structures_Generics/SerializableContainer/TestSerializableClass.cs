@@ -2,13 +2,15 @@
 using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.Serialization;
+
+[assembly: AssemblyVersion("1.1.1.1")]
 
 namespace SerializableContainer
 {
     [Serializable]
     public class TestSerializableClass
     {
-
         public string Name { get; set; }
 
         public int Age { get; set; }
@@ -26,7 +28,7 @@ namespace SerializableContainer
 
         public override int GetHashCode()
         {
-            return (Name, Age).GetHashCode();
+            return Name.Length + Age;
         }
 
         public override string ToString()

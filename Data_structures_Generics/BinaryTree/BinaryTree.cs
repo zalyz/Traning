@@ -14,21 +14,42 @@ namespace BinaryTree
             if (record == null)
                 throw new ArgumentNullException();
 
-            var nextNode = _root;
-            var comparableRecord = record as IComparable;
-            while (nextNode != null)
+            if (_root == null)
             {
-                if (comparableRecord.CompareTo(nextNode.Value) <= 0)
+                _root = new Node(record) { Left = null, Right = null };
+            }
+            else
+            {
+                var nextNode = _root;
+                var comparableRecord = record as IComparable;
+                while (true)
                 {
-                    nextNode = nextNode.Left;
-                }
-                else
-                {
-                    nextNode = nextNode.Right;
+                    if (comparableRecord.CompareTo(nextNode.Value) <= 0)
+                    {
+                        if (nextNode.Left == null)
+                        {
+                            nextNode.Left = new Node(record) { Left = null, Right = null };
+                            break;
+                        }
+                        else
+                        {
+                            nextNode = nextNode.Left;
+                        }
+                    }
+                    else
+                    {
+                        if (nextNode.Right == null)
+                        {
+                            nextNode.Right = new Node(record) { Left = null, Right = null };
+                            break;
+                        }
+                        else
+                        {
+                            nextNode = nextNode.Right;
+                        }
+                    }
                 }
             }
-
-            nextNode = new Node(record) { Left = null, Right = null };
         }
 
         public void TreeBalancing()
@@ -60,6 +81,13 @@ namespace BinaryTree
 
             _root = null;
             CreateTreeFromList(listOfNodes);
+        }
+
+        public List<T> GetTreeValues()
+        {
+            var treeValues = new List<T>();
+            ConvertTreeToList(_root, treeValues);
+            return treeValues;
         }
 
         private void CreateTreeFromList(List<T> list)
@@ -107,19 +135,19 @@ namespace BinaryTree
                 TreeBalancing(ref node.Left);
                 if (node != _root)
                 {
-                    node = IsBal(node);
+                    node = NodeBalansing(node);
                 }
 
                 TreeBalancing(ref node.Right);
 
                 if (node == _root)
                 {
-                    node = IsBal(node);
+                    node = NodeBalansing(node);
                 }
             }
         }
 
-        private Node IsBal(Node node)
+        private Node NodeBalansing(Node node)
         {
             var leftHeight = GetHeight(node.Left);
             var rightHeight = GetHeight(node.Right);

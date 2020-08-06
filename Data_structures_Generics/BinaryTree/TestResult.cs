@@ -8,27 +8,33 @@ namespace BinaryTree
     /// <summary>
     /// Represents the essence of the student's test result.
     /// </summary>
+    [Serializable]
     public class TestResult : IComparable
     {
         /// <summary>
         /// Gets or sets student name.
         /// </summary>
-        public string StudentName { get; private set; }
+        public string StudentName { get; set; }
         
         /// <summary>
         /// Gets or sets test name.
         /// </summary>
-        public string TestName { get; private set; }
+        public string TestName { get; set; }
         
         /// <summary>
         /// Gets or sets test date.
         /// </summary>
-        public DateTime Date { get; private set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Gets or sets test score.
         /// </summary>
-        public int TestScore { get; private set; }
+        public int TestScore { get; set; }
+
+        public TestResult()
+        {
+
+        }
 
         /// <summary>
         /// 
@@ -42,7 +48,7 @@ namespace BinaryTree
             StudentName = studentName;
             TestName = testName;
             Date = date;
-            TestName = testName;
+            TestScore = testScore;
         }
 
         /// <inheritdoc/>
@@ -76,6 +82,24 @@ namespace BinaryTree
                     return 1;
                 }
             }
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as TestResult);
+        }
+
+        public bool Equals(TestResult testResult)
+        {
+            return string.Equals(StudentName, testResult.StudentName) &&
+                string.Equals(TestName, testResult.TestName) &&
+                DateTime.Equals(Date, testResult.Date) &&
+                TestScore == testResult.TestScore;
+        }
+
+        public override int GetHashCode()
+        {
+            return (StudentName, TestName, Date, TestScore).GetHashCode();
         }
     }
 }
