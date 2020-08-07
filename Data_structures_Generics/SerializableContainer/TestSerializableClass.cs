@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.Serialization;
 
-[assembly: AssemblyVersion("1.1.1.1")]
+[assembly: AssemblyVersion("1.1.1.1")]  // Used to represent class version.
 
 namespace SerializableContainer
 {
+    /// <summary>
+    /// Test serializable class with fields.
+    /// </summary>
     [Serializable]
     public class TestSerializableClass
     {

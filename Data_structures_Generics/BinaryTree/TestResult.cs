@@ -31,18 +31,20 @@ namespace BinaryTree
         /// </summary>
         public int TestScore { get; set; }
 
+        /// <summary>
+        /// Creates an instance of the TestResult class.
+        /// </summary>
         public TestResult()
         {
-
         }
 
         /// <summary>
-        /// 
+        /// Creates an instance of the TestResult class and initialize the fields.
         /// </summary>
-        /// <param name="studentName"></param>
-        /// <param name="testName"></param>
-        /// <param name="date"></param>
-        /// <param name="testScore"></param>
+        /// <param name="studentName">Student name.</param>
+        /// <param name="testName">Test name.</param>
+        /// <param name="date">Test date.</param>
+        /// <param name="testScore">Test score.</param>
         public TestResult(string studentName, string testName, DateTime date, int testScore)
         {
             StudentName = studentName;
@@ -84,11 +86,17 @@ namespace BinaryTree
             }
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             return Equals(obj as TestResult);
         }
 
+        /// <summary>
+        /// Determines whether the specifid object is equal to the current object.
+        /// </summary>
+        /// <param name="testResult">Test result for comparing.</param>
+        /// <returns>True if objects are equal, Flase otherwise.</returns>
         public bool Equals(TestResult testResult)
         {
             return string.Equals(StudentName, testResult.StudentName) &&
@@ -97,6 +105,7 @@ namespace BinaryTree
                 TestScore == testResult.TestScore;
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return (StudentName, TestName, Date, TestScore).GetHashCode();

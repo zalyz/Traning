@@ -1,16 +1,23 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BinaryTree;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BinaryTree.Tests
 {
+    /// <summary>
+    /// Defines methods for the testing BinaryTree class.
+    /// </summary>
     [TestClass()]
     public class BinaryTreeTests
     {
+        /// <summary>
+        /// Tree root of default tree.
+        /// </summary>
         private BinaryTree<TestResult> _treeRoot;
 
+        /// <summary>
+        /// Creates default tree.
+        /// </summary>
         [TestInitialize]
         public void TestInitialize()
         {
@@ -23,6 +30,9 @@ namespace BinaryTree.Tests
             _treeRoot.Add(thirdResult);
         }
 
+        /// <summary>
+        /// Adds new test result to the tree.
+        /// </summary>
         [TestMethod()]
         public void Add_InputTestResult_SuccessfulAdding()
         {
@@ -32,6 +42,9 @@ namespace BinaryTree.Tests
             Assert.AreEqual(testResult, actual);
         }
 
+        /// <summary>
+        /// Balancing default tree.
+        /// </summary>
         [TestMethod()]
         public void TreeBalancing_BalancingTreeExpected()
         {
@@ -41,11 +54,14 @@ namespace BinaryTree.Tests
                 new TestResult("Kane", "History", DateTime.Parse("12.12.2020"), 10),
                 new TestResult("Bob", "Russian Test", DateTime.Parse("12.12.2020"), 87),
             };
-            _treeRoot.TreeBalancing();
+            _treeRoot.BalanceTheTree();
             var actualTreeList = _treeRoot.GetTreeValues();
             CollectionAssert.AreEqual(expectedTreeList, actualTreeList);
         }
 
+        /// <summary>
+        /// Writes binary tree to the file.
+        /// </summary>
         [TestMethod()]
         public void WriteToXml_SuccessfulWRiting()
         {
@@ -56,6 +72,9 @@ namespace BinaryTree.Tests
             CollectionAssert.AreEqual(expectedTree, actualTree);
         }
 
+        /// <summary>
+        /// Reades binary tree from the file.
+        /// </summary>
         [TestMethod()]
         public void ReadFromXml_SuccessfulReading()
         {
