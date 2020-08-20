@@ -14,5 +14,7 @@ namespace DatabaseAccess
         public void ReadAll();
 
         public void Delete(T entity);
+
+        public void CreateTable();
     }
 }
