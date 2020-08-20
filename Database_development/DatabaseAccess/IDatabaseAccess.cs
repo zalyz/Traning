@@ -11,7 +11,7 @@ namespace DatabaseAccess
 
         public void Update(T entityToReplace, T substituteEntity);
 
-        public void ReadAll();
+        public IEnumerable<T> ReadAll();
 
         public void Delete(T entity);
 

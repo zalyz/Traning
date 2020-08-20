@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DatabaseAccess.ModelClasses
 {
-    class Exam : ITest
+    public class Exam : ITest
     {
         public string Name { get; set; }
 
