@@ -13,8 +13,9 @@ namespace DatabaseAccess.Tests
         [TestMethod()]
         public void CreateEntityTest()
         {
-            var databaseAccess = new DatabaseAccess<Student>();
-            databaseAccess.CreateTable();
+            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
+            var databaseAccess = DatabaseAccess<Student>.Factory(connectionString);
+            databaseAccess.CreateEntity();
         }
 
         [TestMethod()]
@@ -38,7 +39,9 @@ namespace DatabaseAccess.Tests
         [TestMethod()]
         public void CreateTableTest()
         {
-            Assert.Fail();
+            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
+            var databaseAccess = DatabaseAccess<Student>.Factory(connectionString);
+            databaseAccess.CreateTable();
         }
 
         [TestMethod()]

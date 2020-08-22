@@ -7,6 +7,10 @@ namespace DatabaseAccess
     public interface IDatabaseAccess<T>
         where T : class
     {
+        public void OpenConnection();
+
+        public void CloseConnection();
+
         public void CreateEntity(T entity);
 
         public void Update(T entityToReplace, T substituteEntity);
