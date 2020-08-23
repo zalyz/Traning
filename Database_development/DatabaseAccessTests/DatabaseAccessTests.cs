@@ -15,19 +15,45 @@ namespace DatabaseAccess.Tests
         {
             var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
             var databaseAccess = DatabaseAccess<Student>.Factory(connectionString);
-            databaseAccess.CreateEntity();
+            var student = new Student()
+            {
+                StudentId = 1,
+                FirstName = "Bob",
+                MiddleName = "Alice",
+                LastName = "Rom",
+                DateOfBirthday = DateTime.Parse("21.11.2020"),
+                Gender = "Male",
+                GroupName = "IP-31"
+            };
+
+            databaseAccess.CreateEntity(student);
         }
 
         [TestMethod()]
         public void DeleteTest()
         {
-            Assert.Fail();
+            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
+            var databaseAccess = DatabaseAccess<Student>.Factory(connectionString);
+            var student = new Student()
+            {
+                StudentId = 1,
+                FirstName = "Bob",
+                MiddleName = "Alice",
+                LastName = "Rom",
+                DateOfBirthday = DateTime.Parse("21.11.2020"),
+                Gender = "Male",
+                GroupName = "IP-31"
+            };
+
+            databaseAccess.Delete(student);
         }
 
         [TestMethod()]
         public void ReadAllTest()
         {
-            Assert.Fail();
+            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
+            var databaseAccess = DatabaseAccess<Student>.Factory(connectionString);
+            var asd = databaseAccess.ReadAll();
         }
 
         [TestMethod()]
