@@ -11,7 +11,7 @@ using DatabaseAccess.DatabaseExceptions;
 
 namespace DatabaseAccess
 {
-    public class DatabaseAccess<T> : IDatabaseAccess<T>, IDisposable
+    public class DatabaseAccess<T> : IDatabaseAccess<T>, ITableCreator, IDisposable
         where T : class, new ()
     {
         private SqlConnection _sqlConnection;
@@ -23,37 +23,68 @@ namespace DatabaseAccess
             _sqlConnection = new SqlConnection(connectionString);
         }
 
-        public void OpenConnection()
+        public void Add(T entity)
         {
-            _sqlConnection.Open();
+            OpenConnectionAndExecute(entity, (entity) => AddEntity(entity));
         }
 
-        public void CloseConnection()
+        public void Delete(T entity)
         {
+            OpenConnectionAndExecute(entity, (entity) => DeleteEntity(entity));
+        }
+
+        public void Update(T entity)
+        {
+            OpenConnectionAndExecute(entity, (entity) => UpdateEntity(entity));
+        }
+
+        public IEnumerable<T> ReadAll()
+        {
+            return OpenConnectionAndExecute(() => ReadAllEntities());
+        }
+
+        private void OpenConnectionAndExecute(T entity, Action<T> action)
+        {
+            _sqlConnection.Open();
+
+            action.Invoke(entity);
+
             _sqlConnection.Close();
         }
 
-        public void CreateEntity(T entity)
+        private IEnumerable<T> OpenConnectionAndExecute(Func<IEnumerable<T>> func)
         {
-            OpenConnectionIfItClosed();
+            _sqlConnection.Open();
+            var result = func.Invoke();
+            _sqlConnection.Close();
+            return result;
+        }
+
+        private void AddEntity(T entity)
+        {
             if (!IsTableExist())
             {
                 CreateTable();
             }
 
-            var createEntityCommand = GetInsertCommand(typeof(T));
-            createEntityCommand.Append(GetValuesString(typeof(T)));
-            using (var command = new SqlCommand(createEntityCommand.ToString(), _sqlConnection))
+            var addCommands = GetAddCommand(typeof(T));
+            var complexTypeObjects = GetComplexTypeObjects(entity);
+            for (int index = 0; index < addCommands.Count(); index++)
             {
-                command.Parameters.Clear();
-                SetProperiesValues(entity, command);
-                command.ExecuteNonQuery();
+                if (!IsComplexTypeObjectExist(complexTypeObjects.ElementAt(index)))
+                {
+                    using (var command = new SqlCommand(addCommands.ElementAt(index), _sqlConnection))
+                    {
+                        command.Parameters.Clear();
+                        SetProperiesValues(complexTypeObjects.ElementAt(index), command);
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
         }
 
-        public void Delete(T entity)
+        private void DeleteEntity(T entity)
         {
-            OpenConnectionIfItClosed();
             if (!IsTableExist())
             {
                 throw new TableNotFoundException("Table " + entity.GetType().Name + "is not found at " + _sqlConnection.Database);
@@ -68,23 +99,22 @@ namespace DatabaseAccess
             }
         }
 
-        public IEnumerable<T> ReadAll()
+        private IEnumerable<T> ReadAllEntities()
         {
-            OpenConnectionIfItClosed();
             if (!IsTableExist())
             {
                 CreateTable();
             }
 
             var listOfTableValues = new List<T>();
-            var selectAllCommand = GetSelectAllCommand();
+            var selectAllCommand = GetSelectAllCommand(typeof(T));
             using (var command = new SqlCommand(selectAllCommand, _sqlConnection))
             {
                 using (var reader = command.ExecuteReader())
                 {
                     while(reader.Read())
                     {
-                        var entity = ReadEntityFromDatabase(reader);
+                        var entity = ReadEntityFromDatabase(typeof(T), reader);
                         listOfTableValues.Add(entity);
                     }
                 }
@@ -93,41 +123,47 @@ namespace DatabaseAccess
             return listOfTableValues;
         }
 
-        public void Update(T entityToReplace, T substituteEntity)
+        private void UpdateEntity(object entity)
         {
-            OpenConnectionIfItClosed();
             if (!IsTableExist())
             {
                 CreateTable();
             }
-
-            throw new NotImplementedException();
-        }
-
-        public void CreateTable()
-        {
-            OpenConnectionIfItClosed();
-            if (!IsTableExist())
+            
+            var properties = entity.GetType().GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null);
+            foreach (var property in properties)
             {
-                var command = GetCreateTableCommand();
-                using (var sqlCommand = new SqlCommand(command, _sqlConnection))
-                {
-                    sqlCommand.ExecuteNonQuery();
-                }
+                UpdateEntity(property.GetValue(entity));
+            }
+
+            var updateCommand = GetUpdateCommand(entity);
+            using (var sqlCommand = new SqlCommand(updateCommand, _sqlConnection))
+            {
+                SetProperiesValues(entity, sqlCommand);
+                sqlCommand.ExecuteNonQuery();
             }
         }
 
-        public void CreateTable(string scriptFilePath)
+        private string GetUpdateCommand(object entity)
         {
-            OpenConnectionIfItClosed();
-            if (!IsTableExist())
+            var updateCommand = new StringBuilder();
+            updateCommand.Append($"UPDATE {entity.GetType().Name} SET ");
+            var properties = entity.GetType().GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() == null);
+            for (int index = 0; index < properties.Count(); index++)
             {
-                var command = File.ReadAllText(scriptFilePath);
-                using (var sqlCommand = new SqlCommand(command, _sqlConnection))
+                if (index < properties.Count() - 1)
                 {
-                    sqlCommand.ExecuteNonQuery();
+                    updateCommand.Append(properties.ElementAt(index).Name + "=@" + properties.ElementAt(index).Name + ", ");
+                }
+                else
+                {
+                    updateCommand.Append(properties.ElementAt(index).Name + "=@" + properties.ElementAt(index).Name + " ");
                 }
             }
+            var idProperty = entity.GetType().GetProperty(entity.GetType().Name + "Id");
+            updateCommand.Append($"WHERE {entity.GetType().Name}Id = {idProperty.GetValue(entity)} ");
+
+            return updateCommand.ToString();
         }
 
         public static DatabaseAccess<T> Factory(string connectionString)
@@ -145,18 +181,51 @@ namespace DatabaseAccess
             _sqlConnection.Dispose();
         }
 
-        //----------------------------------------------------------------------------------------------
+        public void CreateTable()
+        {
+            _sqlConnection.Open();
+
+            if (!IsTableExist())
+            {
+                var commands = GetCreateCommands(typeof(T));
+                foreach (var command in commands)
+                {
+                    using (var sqlCommand = new SqlCommand(command, _sqlConnection))
+                    {
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            _sqlConnection.Close();
+        }
+
+        public void CreateTable(string scriptFilePath)
+        {
+            _sqlConnection.Open();
+            if (!IsTableExist())
+            {
+                var command = File.ReadAllText(scriptFilePath);
+                using (var sqlCommand = new SqlCommand(command, _sqlConnection))
+                {
+                    sqlCommand.ExecuteNonQuery();
+                }
+            }
+
+            _sqlConnection.Close();
+        }
+
         //----------------------------------------------------------------------------------------------
 
-        private T ReadEntityFromDatabase(SqlDataReader dataReader)
+        private T ReadEntityFromDatabase(Type type, SqlDataReader dataReader)
         {
-            var entity = Activator.CreateInstance(typeof(T));
+            var entity = Activator.CreateInstance(type);
             var props = entity.GetType().GetProperties();
             foreach (var property in props)
             {
-                if (property.GetCustomAttribute<ComplexTypeAttribute>() != null)
+                if (property.GetCustomAttribute<ForeignKeyAttribute>() != null)
                 {
-                    property.SetValue(entity, SetInnerComplexTypePropertyValue(property.PropertyType, dataReader));
+                    property.SetValue(entity, ReadEntityFromDatabase(property.PropertyType, dataReader));
                 }
                 else
                 {
@@ -166,6 +235,30 @@ namespace DatabaseAccess
             }
 
             return (T)entity;
+        }
+
+        private bool IsComplexTypeObjectExist(object entity)
+        {
+            if (IsTableExist())
+            {
+                var selectCommand = new StringBuilder();
+                var idProperty = entity.GetType().GetProperty($"{entity.GetType().Name}Id");
+                selectCommand.Append($"SELECT * FROM {entity.GetType().Name} WHERE {entity.GetType().Name}Id = {idProperty.GetValue(entity)};");
+                using (var sqlCommand = new SqlCommand(selectCommand.ToString(), _sqlConnection))
+                {
+                    using (var reader = sqlCommand.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private object ParseDatabaseValue(Type propertyType, string columnName, SqlDataReader dataReader)
@@ -202,122 +295,40 @@ namespace DatabaseAccess
 
             if (propertyType == typeof(DateTime))
             { 
-                var date = dataReader.GetString(columnName);
-                return DateTime.Parse(date);
+                return dataReader.GetDateTime(columnName);
             }
 
             throw new InvalidCastException("Cant set a property with type " + propertyType.DeclaringType.Name);
         }
 
-        private object SetInnerComplexTypePropertyValue(Type innerComplexType, SqlDataReader dataReader)
-        {
-            var innerComplexObject = Activator.CreateInstance(innerComplexType);
-            var props = innerComplexType.GetProperties();
-            foreach (var property in props)
-            {
-                if (property.GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    property.SetValue(innerComplexObject, SetInnerComplexTypePropertyValue(property.PropertyType, dataReader));
-                }
-                else
-                {
-                    var propertyValue = ParseDatabaseValue(property.PropertyType, innerComplexType.Name + "_" + property.Name, dataReader);
-                    property.SetValue(innerComplexObject, propertyValue);
-                }
-            }
-
-            return innerComplexType;
-        }
-
-        private string GetSelectAllCommand()
+        private string GetSelectAllCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append("SELECT ");
-            GetPropsNames(typeof(T), stringBuilder);
-            stringBuilder.Append(" FROM " + typeof(T).Name + ";");
-            return stringBuilder.ToString();
-        }
-
-        private string GetDeleteCommand(Type type)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append($"DELETE FROM {type.Name} WHERE ");
-            var properties = type.GetProperties();
-            for (int index = 0; index < properties.Length; index++)
-            {
-                if (properties[index].GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    var innerComplexTypeRemoveCommand = GetInnerComplexTypeDeleteCommand(properties[index].PropertyType);
-                    stringBuilder.Append(innerComplexTypeRemoveCommand);
-                }
-                else
-                {
-                    if (index < properties.Length - 1)
-                    {
-                        stringBuilder.Append(properties[index].Name + "=@" + properties[index].Name + " AND ");
-                    }
-                    else
-                    {
-                        stringBuilder.Append(properties[index].Name + "=@" + properties[index].Name);
-                    }
-                }
-            }
-
+            stringBuilder.Append(GetSelectCommand(type));
             stringBuilder.Append(";");
             return stringBuilder.ToString();
         }
 
-        private string GetInnerComplexTypeDeleteCommand(Type type)
+        private string GetSelectCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
-            var properties = type.GetProperties();
-            for (int index = 0; index < properties.Length; index++)
+            stringBuilder.Append("SELECT ");
+            GetPropsNames(type, stringBuilder);
+
+            var complexTypeProps = type.GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null);
+            if (complexTypeProps.Any())
             {
-                if (properties[index].GetCustomAttribute<ComplexTypeAttribute>() != null)
+                stringBuilder.Append("(");
+                foreach (var property in complexTypeProps)
                 {
-                    var innerComplexTypeRemoveCommand = GetInnerComplexTypeDeleteCommand(properties[index].PropertyType);
-                    stringBuilder.Append(innerComplexTypeRemoveCommand);
+                    stringBuilder.Append(GetSelectCommand(property.PropertyType));
                 }
-                else
-                {
-                    stringBuilder.Append(type.Name + "_" + properties[index].Name + "=@" + type.Name + "_" + properties[index].Name + " ");
-                }
+                stringBuilder.Append(")");
             }
+
+            stringBuilder.Append(" FROM " + typeof(T).Name);
 
             return stringBuilder.ToString();
-        }
-
-        private void SetProperiesValues(object entity, SqlCommand sqlCommand)
-        {
-            var properies = entity.GetType().GetProperties();
-            foreach (var property in properies)
-            {
-                if (property.GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    SetInnerComplexTypePropsValues(property.GetValue(entity), sqlCommand);
-                }
-                else
-                {
-                    sqlCommand.Parameters.AddWithValue("@" + property.Name, property.GetValue(entity));
-                }
-            }
-        }
-
-        private void SetInnerComplexTypePropsValues(object entity, SqlCommand sqlCommand)
-        {
-            var type = entity.GetType();
-            var properies = type.GetProperties();
-            foreach (var property in properies)
-            {
-                if (property.GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    SetInnerComplexTypePropsValues(property.GetValue(entity), sqlCommand);
-                }
-                else
-                {
-                    sqlCommand.Parameters.AddWithValue("@" + type.Name + "_" + property.Name, property.GetValue(entity));
-                }
-            }
         }
 
         private void GetPropsNames(Type type, StringBuilder stringBuilder)
@@ -325,11 +336,7 @@ namespace DatabaseAccess
             var properties = type.GetProperties();
             for (int index = 0; index < properties.Length; index++)
             {
-                if (properties[index].GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    GetInnerComplexTypePropsNames(properties[index].PropertyType, stringBuilder);
-                }
-                else
+                if (properties[index].GetCustomAttribute<ForeignKeyAttribute>() == null)
                 {
                     if (index < properties.Length - 1)
                     {
@@ -343,33 +350,63 @@ namespace DatabaseAccess
             }
         }
 
-        private void GetInnerComplexTypePropsNames(Type type, StringBuilder stringBuilder)
+        private string GetDeleteCommand(Type type)
         {
-            var properties = type.GetProperties();
-            for (int index = 0; index < properties.Length; index++)
+            if (type.GetProperties().Where(e => e.Name.ToUpper() == (type.Name + "Id").ToUpper()).Any())
             {
-                if (properties[index].GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    GetInnerComplexTypePropsNames(properties[index].PropertyType, stringBuilder);
-                }
-                else
-                {
-                    if (index < properties.Length - 1)
-                    {
-                        stringBuilder.Append(type.Name + "_" + properties[index].Name + ", ");
-                    }
-                    else
-                    {
-                        stringBuilder.Append(type.Name + "_" + properties[index].Name);
-                    }
-                }
+                var stringBuilder = new StringBuilder();
+                stringBuilder.Append($"DELETE FROM {type.Name} WHERE {type.Name}Id = @{type.Name}Id;");
+                return stringBuilder.ToString();
             }
+
+            throw new IdPropertyNotFoundException("Class " + type.Name + " dont contain the " + type.Name + "Id Property");
+        }
+
+        private IEnumerable<object> GetComplexTypeObjects(object obj)
+        {
+            var complexTypeObjects = new List<object>()
+            {
+                obj
+            };
+            var innerComplexTypes = obj.GetType().GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null);
+            foreach (var complexType in innerComplexTypes)
+            {
+                complexTypeObjects.Add(complexType.GetValue(obj));
+                complexTypeObjects.AddRange(GetComplexTypeObjects(complexTypeObjects[^1]));
+            }
+
+            return complexTypeObjects;
+        }
+
+        private void SetProperiesValues(object entity, SqlCommand sqlCommand)
+        {
+            var properies = entity.GetType().GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() == null);
+            foreach (var property in properies)
+            {
+                sqlCommand.Parameters.AddWithValue("@" + property.Name, property.GetValue(entity));
+            }
+        }
+
+        private IEnumerable<string> GetAddCommand(Type type)
+        {
+            var addCommands = new List<string>();
+            var createEntityCommand = GetInsertCommand(type);
+            createEntityCommand.Append(GetValuesString(type));
+            createEntityCommand.Append(";");
+            addCommands.Add(createEntityCommand.ToString());
+            var complexTypeProps = type.GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null);
+            foreach (var complexType in complexTypeProps)
+            {
+                addCommands.AddRange(GetAddCommand(complexType.PropertyType));
+            }
+
+            return addCommands;
         }
 
         private StringBuilder GetInsertCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append("INSERT " + type.Name + "(");
+            stringBuilder.Append("INSERT " + type.Name + " (");
             GetPropsNames(type, stringBuilder);
             stringBuilder.Append(") ");
             return stringBuilder;
@@ -382,11 +419,7 @@ namespace DatabaseAccess
             var properties = type.GetProperties();
             for (int index = 0; index < properties.Length; index++)
             {
-                if (properties[index].GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    stringBuilder.Append(GetInnerComplexTypeValueString(properties[index].PropertyType));
-                }
-                else
+                if (properties[index].GetCustomAttribute<ForeignKeyAttribute>() == null)
                 {
                     if (index < properties.Length - 1)
                     {
@@ -398,75 +431,38 @@ namespace DatabaseAccess
                     }
                 }
             }
-            stringBuilder.Append(");");
-            return stringBuilder.ToString();
-        }
 
-        private string GetInnerComplexTypeValueString(Type type)
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append("VALUES (");
-            var properties = type.GetProperties();
-            for (int index = 0; index < properties.Length; index++)
-            {
-                if (properties[index].GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    stringBuilder.Append(GetInnerComplexTypeValueString(properties[index].PropertyType));
-                }
-                else
-                {
-                    if (index < properties.Length - 1)
-                    {
-                        stringBuilder.Append("@" + type.Name + "_" + properties[index].Name + ", ");
-                    }
-                    else
-                    {
-                        stringBuilder.Append("@" + type.Name + "_" + properties[index].Name);
-                    }
-                }
-            }
-            stringBuilder.Append(");");
-            return stringBuilder.ToString();
-        }
-
-        private string GetCreateTableCommand()
-        {
-            var stringBuilder = new StringBuilder();
-            stringBuilder.Append("Create Table " + typeof(T).Name);
-            stringBuilder.Append("\n(\n");
-            var properties = typeof(T).GetProperties();
-            foreach (var property in properties)
-            {
-                if (property.GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    stringBuilder.Append(GetInnerComplexTypePropsForCreatingTable(property.PropertyType));
-                }
-                else
-                {
-                    var propertyType = GetSqlTypeOfProperty(property.PropertyType);
-                    stringBuilder.Append(property.Name + " " + propertyType + ",\n");
-                }
-            }
             stringBuilder.Append(")");
             return stringBuilder.ToString();
         }
 
-        private string GetInnerComplexTypePropsForCreatingTable(Type type)
+        private IEnumerable<string> GetCreateCommands(Type type)
         {
             var stringBuilder = new StringBuilder();
+            var commands = new List<string>();
             var properties = type.GetProperties();
+            var primitivePropties = properties.Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() == null);
+            var complexTypeProps = properties.Except(primitivePropties);
+            commands.Add(GetCreateTableCommand(primitivePropties));
+            foreach (var property in complexTypeProps)
+            {
+                commands.AddRange(GetCreateCommands(property.PropertyType));
+            }
+
+            return commands;
+        }
+
+        private string GetCreateTableCommand(IEnumerable<PropertyInfo> properties)
+        {
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("Create Table " + typeof(T).Name);
+            stringBuilder.Append("\n(\n");
             foreach (var property in properties)
             {
-                if (property.GetCustomAttribute<ComplexTypeAttribute>() != null)
-                {
-                    stringBuilder.Append(GetInnerComplexTypePropsForCreatingTable(property.PropertyType));
-                }
-                else
-                {
-                    var propertyType = GetSqlTypeOfProperty(property.PropertyType);
-                    stringBuilder.Append(type.Name + "_" + property.Name + " " + propertyType + ",\n");
-                }
+                var propertyType = GetSqlTypeOfProperty(property.PropertyType);
+                stringBuilder.Append(property.Name + " " + propertyType + ",\n");
             }
+            stringBuilder.Append(");");
 
             return stringBuilder.ToString();
         }
@@ -505,7 +501,7 @@ namespace DatabaseAccess
 
             if (propertyType == typeof(DateTime))
             {
-                return "varchar(30)";
+                return "Date";
             }
 
             throw new InvalidCastException("Cant create a column with type " + propertyType.DeclaringType.Name);
@@ -517,14 +513,6 @@ namespace DatabaseAccess
                         new string[] { null, null, typeof(T).Name });
 
             return dTable.Rows.Count > 0;
-        }
-
-        private void OpenConnectionIfItClosed()
-        {
-            if (_sqlConnection.State == ConnectionState.Closed)
-            {
-                OpenConnection();
-            }
         }
     }
 }

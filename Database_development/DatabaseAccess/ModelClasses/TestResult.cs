@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DatabaseAccess.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,13 @@ namespace DatabaseAccess.ModelClasses
 {
     class TestResult
     {
-        public string TestName { get; set; }
+        [ForeignKey("ExamId")]
+        public Test Test { get; set; }
+
+        [ForeignKey("StudentId")]
+        public Student Student { get; set; }
+
+        public int TestId { get; set; }
 
         public int StudentId { get; set; }
 

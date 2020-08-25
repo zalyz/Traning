@@ -26,7 +26,7 @@ namespace DatabaseAccess.Tests
                 GroupName = "IP-31"
             };
 
-            databaseAccess.CreateEntity(student);
+            databaseAccess.Add(student);
         }
 
         [TestMethod()]
@@ -59,7 +59,20 @@ namespace DatabaseAccess.Tests
         [TestMethod()]
         public void UpdateTest()
         {
-            Assert.Fail();
+            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
+            var databaseAccess = DatabaseAccess<Student>.Factory(connectionString);
+            var student = new Student()
+            {
+                StudentId = 1,
+                FirstName = "slava",
+                MiddleName = "Alice",
+                LastName = "Dranev",
+                DateOfBirthday = DateTime.Parse("21.11.2020"),
+                Gender = "Male",
+                GroupName = "IP-31"
+            };
+
+            databaseAccess.Update(student);
         }
 
         [TestMethod()]

@@ -4,8 +4,10 @@ using System.Text;
 
 namespace DatabaseAccess.ModelClasses
 {
-    class Test : ITest
+    class Test
     {
+        public int TestId { get; set; }
+
         public string Name { get; set; }
 
         public DateTime Date { get; set; }
