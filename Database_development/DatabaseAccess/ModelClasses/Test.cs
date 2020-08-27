@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DatabaseAccess.ModelClasses
 {
-    class Test
+    public class Test
     {
         public int TestId { get; set; }
 

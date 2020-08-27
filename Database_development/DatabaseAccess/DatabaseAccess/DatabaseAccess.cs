@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
-using System.IO;
 using DatabaseAccess.Attributes;
 using DatabaseAccess.DatabaseExceptions;
 
 namespace DatabaseAccess
 {
-    public class DatabaseAccess<T> : IDatabaseAccess<T>, ITableCreator, IDisposable
+    public class DatabaseAccess<T> : IDatabaseAccess<T>, IDisposable
         where T : class, new ()
     {
         private SqlConnection _sqlConnection;
@@ -103,7 +102,7 @@ namespace DatabaseAccess
         {
             if (!IsTableExist())
             {
-                CreateTable();
+                throw new TableNotFoundException("Table " + typeof(T).Name + "is not found at " + _sqlConnection.Database);
             }
 
             var listOfTableValues = new List<T>();
@@ -114,7 +113,7 @@ namespace DatabaseAccess
                 {
                     while(reader.Read())
                     {
-                        var entity = ReadEntityFromDatabase(typeof(T), reader);
+                        var entity = (T)ReadEntityFromDatabase(typeof(T), reader);
                         listOfTableValues.Add(entity);
                     }
                 }
@@ -127,7 +126,7 @@ namespace DatabaseAccess
         {
             if (!IsTableExist())
             {
-                CreateTable();
+                throw new TableNotFoundException("Table " + entity.GetType().Name + "is not found at " + _sqlConnection.Database);
             }
             
             var properties = entity.GetType().GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null);
@@ -181,43 +180,19 @@ namespace DatabaseAccess
             _sqlConnection.Dispose();
         }
 
-        public void CreateTable()
+        private void CreateTable()
         {
-            _sqlConnection.Open();
-
-            if (!IsTableExist())
+            var commands = GetCreateCommands(typeof(T));
+            foreach (var command in commands)
             {
-                var commands = GetCreateCommands(typeof(T));
-                foreach (var command in commands)
-                {
-                    using (var sqlCommand = new SqlCommand(command, _sqlConnection))
-                    {
-                        sqlCommand.ExecuteNonQuery();
-                    }
-                }
-            }
-
-            _sqlConnection.Close();
-        }
-
-        public void CreateTable(string scriptFilePath)
-        {
-            _sqlConnection.Open();
-            if (!IsTableExist())
-            {
-                var command = File.ReadAllText(scriptFilePath);
                 using (var sqlCommand = new SqlCommand(command, _sqlConnection))
                 {
                     sqlCommand.ExecuteNonQuery();
                 }
             }
-
-            _sqlConnection.Close();
         }
 
-        //----------------------------------------------------------------------------------------------
-
-        private T ReadEntityFromDatabase(Type type, SqlDataReader dataReader)
+        private object ReadEntityFromDatabase(Type type, SqlDataReader dataReader)
         {
             var entity = Activator.CreateInstance(type);
             var props = entity.GetType().GetProperties();
@@ -234,7 +209,7 @@ namespace DatabaseAccess
                 }
             }
 
-            return (T)entity;
+            return entity;
         }
 
         private bool IsComplexTypeObjectExist(object entity)
@@ -312,21 +287,17 @@ namespace DatabaseAccess
         private string GetSelectCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append("SELECT ");
-            GetPropsNames(type, stringBuilder);
-
-            var complexTypeProps = type.GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null);
+            stringBuilder.Append("SELECT * FROM " + type.Name + " ");
+            var complexTypeProps = type.GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null).ToList();
             if (complexTypeProps.Any())
             {
-                stringBuilder.Append("(");
-                foreach (var property in complexTypeProps)
+                for (int index = 0; index < complexTypeProps.Count; index++)
                 {
-                    stringBuilder.Append(GetSelectCommand(property.PropertyType));
+                    var foreignKey = complexTypeProps[index].GetCustomAttribute<ForeignKeyAttribute>().KeyName;
+                    stringBuilder.Append($"JOIN {complexTypeProps[index].PropertyType.Name} ON {type.Name}.{foreignKey} = {complexTypeProps[index].PropertyType.Name}.{complexTypeProps[index].PropertyType.Name}Id ");
+                    
                 }
-                stringBuilder.Append(")");
             }
-
-            stringBuilder.Append(" FROM " + typeof(T).Name);
 
             return stringBuilder.ToString();
         }
@@ -372,7 +343,7 @@ namespace DatabaseAccess
             foreach (var complexType in innerComplexTypes)
             {
                 complexTypeObjects.Add(complexType.GetValue(obj));
-                complexTypeObjects.AddRange(GetComplexTypeObjects(complexTypeObjects[^1]));
+                GetComplexTypeObjects(complexTypeObjects[^1]);
             }
 
             return complexTypeObjects;
@@ -443,7 +414,7 @@ namespace DatabaseAccess
             var properties = type.GetProperties();
             var primitivePropties = properties.Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() == null);
             var complexTypeProps = properties.Except(primitivePropties);
-            commands.Add(GetCreateTableCommand(primitivePropties));
+            commands.Add(GetCreateTableCommand(type.Name, primitivePropties));
             foreach (var property in complexTypeProps)
             {
                 commands.AddRange(GetCreateCommands(property.PropertyType));
@@ -452,10 +423,10 @@ namespace DatabaseAccess
             return commands;
         }
 
-        private string GetCreateTableCommand(IEnumerable<PropertyInfo> properties)
+        private string GetCreateTableCommand(string tableName, IEnumerable<PropertyInfo> properties)
         {
             var stringBuilder = new StringBuilder();
-            stringBuilder.Append("Create Table " + typeof(T).Name);
+            stringBuilder.Append("Create Table " + tableName);
             stringBuilder.Append("\n(\n");
             foreach (var property in properties)
             {

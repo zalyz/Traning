@@ -1,12 +1,11 @@
 ﻿using DatabaseAccess.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DatabaseAccess.ModelClasses
 {
-    class ExamResult
+    public class ExamResult : IResult
     {
+        public int ExamResultId { get; set; }
+
         [ForeignKey("ExamId")]
         public Exam Exam { get; set; }
 
