@@ -6,15 +6,27 @@ using System.Text;
 
 namespace DatabaseAccess.ExcelSerialization
 {
+    /// <summary>
+    /// Saves an object to the .xlsx file.
+    /// </summary>
+    /// <typeparam name="T">Class for formatting</typeparam>
     public class XlsxFormat<T> : IFormat<T>
     {
+        /// <summary>
+        /// Path of the xlsx file.
+        /// </summary>
         private string _filePath;
 
+        /// <summary>
+        /// Create instance of XlsxFormat class.
+        /// </summary>
+        /// <param name="filePath">File path to save.</param>
         public XlsxFormat(string filePath)
         {
             _filePath = filePath;
         }
 
+        /// <inheritdoc/>
         public void SaveToFile(string[] columnNames, IEnumerable<T> rowValues)
         {
             ExcelPackage ExcelPkg = new ExcelPackage();
@@ -26,6 +38,11 @@ namespace DatabaseAccess.ExcelSerialization
             ExcelPkg.SaveAs(new FileInfo(_filePath));
         }
 
+        /// <summary>
+        /// Sets row values of the table.
+        /// </summary>
+        /// <param name="values">Collection of the values.</param>
+        /// <param name="worksheet">Instance of Exel worksheet.</param>
         private void SetRowValues(IEnumerable<T> values, ExcelWorksheet worksheet)
         {
             var fields = typeof(T).GetFields();
@@ -47,6 +64,11 @@ namespace DatabaseAccess.ExcelSerialization
             }
         }
 
+        /// <summary>
+        /// Sets Column names of the table.
+        /// </summary>
+        /// <param name="columnNames">Collection of the column names.</param>
+        /// <param name="worksheet">Instance of Exel worksheet.</param>
         private void SetColumnNames(string[] columnNames, ExcelWorksheet worksheet)
         {
             for (int index = 0; index < columnNames.Length; index++)

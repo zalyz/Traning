@@ -10,6 +10,10 @@ using DatabaseAccess.DatabaseExceptions;
 
 namespace DatabaseAccess
 {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class DatabaseAccess<T> : IDatabaseAccess<T>, IDisposable
         where T : class, new ()
     {
@@ -22,21 +26,25 @@ namespace DatabaseAccess
             _sqlConnection = new SqlConnection(connectionString);
         }
 
+        /// <inheritdoc/>
         public void Add(T entity)
         {
             OpenConnectionAndExecute(entity, (entity) => AddEntity(entity));
         }
 
+        /// <inheritdoc/>
         public void Delete(T entity)
         {
             OpenConnectionAndExecute(entity, (entity) => DeleteEntity(entity));
         }
 
+        /// <inheritdoc/>
         public void Update(T entity)
         {
             OpenConnectionAndExecute(entity, (entity) => UpdateEntity(entity));
         }
 
+        /// <inheritdoc/>
         public IEnumerable<T> ReadAll()
         {
             return OpenConnectionAndExecute(() => ReadAllEntities());
@@ -175,6 +183,7 @@ namespace DatabaseAccess
             return _databaseAccess;
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             _sqlConnection.Dispose();

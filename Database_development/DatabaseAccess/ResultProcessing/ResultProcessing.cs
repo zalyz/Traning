@@ -6,8 +6,12 @@ using DatabaseAccess.ModelClasses;
 
 namespace DatabaseAccess.ResultProcessing
 {
+    /// <summary>
+    /// Contains methods for the proseccing result.
+    /// </summary>
     public class ResultProcessing : IResultProcessing
     {
+        /// <inheritdoc/>
         public IEnumerable<(string, string, int)> GetExpelledStudents(IDatabaseAccess<TestResult> database)
         {
             var listOfTestResult = database.ReadAll().ToList();
@@ -28,6 +32,7 @@ namespace DatabaseAccess.ResultProcessing
             return listForFile;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<(string, string, int)> GetExpelledStudents(IDatabaseAccess<ExamResult> database)
         {
             var listOfExamResult = database.ReadAll().ToList();
@@ -48,6 +53,7 @@ namespace DatabaseAccess.ResultProcessing
             return listForFile;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<(string, string, int, int, int)> SessionMarks(IDatabaseAccess<TestResult> database)
         {
             var listOfExamResult = database.ReadAll().ToList();
@@ -71,6 +77,7 @@ namespace DatabaseAccess.ResultProcessing
             return listForFile;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<(string, string, int, int, int)> SessionMarks(IDatabaseAccess<ExamResult> database)
         {
             var listOfExamResult = database.ReadAll().ToList();
@@ -94,6 +101,7 @@ namespace DatabaseAccess.ResultProcessing
             return listForFile;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<(string, string, int, int)> SessionResults(IDatabaseAccess<TestResult> database)
         {
             var listOfExamResult = database.ReadAll().ToList();
@@ -115,6 +123,7 @@ namespace DatabaseAccess.ResultProcessing
             return listForFile;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<(string, string, int, int)> SessionResults(IDatabaseAccess<ExamResult> database)
         {
             var listOfExamResult = database.ReadAll().ToList();
