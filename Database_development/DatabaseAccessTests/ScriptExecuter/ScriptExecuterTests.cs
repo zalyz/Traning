@@ -14,7 +14,7 @@ namespace DatabaseAccess.ScriptExecuter.Tests
         {
             var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
             var filePath = @"../../../AddTest.sql";
-            ScriptExecuter.ExecuteScript(filePath, connectionString);
+            ScriptExecuter.Execute(filePath, connectionString);
         }
     }
 }

@@ -41,5 +41,39 @@ namespace DatabaseAccess.ModelClasses
         /// Gets or sets group name.
         /// </summary>
         public string GroupName { get; set; }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return Equals((Student)obj);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="student">Student for comparing.</param>
+        /// <returns>True if object is equal, False otherwise.</returns>
+        private bool Equals(Student student)
+        {
+            return StudentId == student.StudentId &&
+                string.Equals(FirstName, student.FirstName) &&
+                string.Equals(MiddleName, student.MiddleName) &&
+                string.Equals(LastName, student.LastName) &&
+                string.Equals(Gender, student.Gender) &&
+                DateTime.Equals(DateOfBirthday, student.DateOfBirthday) &&
+                string.Equals(GroupName, student.GroupName);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return (StudentId, FirstName, MiddleName, LastName, Gender, DateOfBirthday, GroupName).GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{FirstName} | {MiddleName} | {LastName} | {Gender} | {DateOfBirthday} | {GroupName}";
+        }
     }
 }

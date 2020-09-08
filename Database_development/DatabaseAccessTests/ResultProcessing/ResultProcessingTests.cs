@@ -7,9 +7,15 @@ using DatabaseAccess.ModelClasses;
 
 namespace DatabaseAccess.ResultProcessing.Tests
 {
+    /// <summary>
+    /// Defines methods for testing ResultProcessing class.
+    /// </summary>
     [TestFixture]
     public class ResultProcessingTests
     {
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetExpelledStudents_ExpelledStudentsByTestReturned()
         {
@@ -19,6 +25,9 @@ namespace DatabaseAccess.ResultProcessing.Tests
             var results = resProc.GetExpelledStudents(dataAccessTest);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void GetExpelledStudents_ExpelledStudentsByExamReturned()
         {
@@ -28,6 +37,9 @@ namespace DatabaseAccess.ResultProcessing.Tests
             var results = resProc.GetExpelledStudents(dataAccessExam);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void SessionMarks_TestMarksReturned()
         {
@@ -37,6 +49,9 @@ namespace DatabaseAccess.ResultProcessing.Tests
             var results = resProc.SessionResults(dataAccess);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void SessionMarks_ExamMarksReturned()
         {
@@ -46,6 +61,9 @@ namespace DatabaseAccess.ResultProcessing.Tests
             var results = resProc.SessionResults(dataAccess);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void SessionResults_TestResultsReturned()
         {
@@ -55,6 +73,9 @@ namespace DatabaseAccess.ResultProcessing.Tests
             var results = resProc.SessionResults(dataAccess);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         [Test]
         public void SessionResults_ExamResultsReturned()
         {

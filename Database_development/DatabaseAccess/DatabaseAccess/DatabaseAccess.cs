@@ -11,16 +11,26 @@ using DatabaseAccess.DatabaseExceptions;
 namespace DatabaseAccess
 {
     /// <summary>
-    /// 
+    /// Allows to access the database.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Class to manipulate.</typeparam>
     public class DatabaseAccess<T> : IDatabaseAccess<T>, IDisposable
         where T : class, new ()
     {
+        /// <summary>
+        /// Instance of database connection.
+        /// </summary>
         private SqlConnection _sqlConnection;
 
+        /// <summary>
+        /// Instance of DatabaseAccess for singleton.
+        /// </summary>
         private static DatabaseAccess<T> _databaseAccess;
 
+        /// <summary>
+        /// Creates instance of DatabaseAccess class.
+        /// </summary>
+        /// <param name="connectionString">Connection string to database.</param>
         private DatabaseAccess(string connectionString)
         {
             _sqlConnection = new SqlConnection(connectionString);
@@ -50,6 +60,11 @@ namespace DatabaseAccess
             return OpenConnectionAndExecute(() => ReadAllEntities());
         }
 
+        /// <summary>
+        /// Opens connection to the database and execute action with it.
+        /// </summary>
+        /// <param name="entity">Entity for action.</param>
+        /// <param name="action">ACtion with database.</param>
         private void OpenConnectionAndExecute(T entity, Action<T> action)
         {
             _sqlConnection.Open();
@@ -59,6 +74,11 @@ namespace DatabaseAccess
             _sqlConnection.Close();
         }
 
+        /// <summary>
+        /// Opens connection to the database and execute action with it.
+        /// </summary>
+        /// <param name="func">Function for Executing</param>
+        /// <returns>Collection of function results.</returns>
         private IEnumerable<T> OpenConnectionAndExecute(Func<IEnumerable<T>> func)
         {
             _sqlConnection.Open();
@@ -67,6 +87,10 @@ namespace DatabaseAccess
             return result;
         }
 
+        /// <summary>
+        /// Adds entity to database.
+        /// </summary>
+        /// <param name="entity">Entity for adding.</param>
         private void AddEntity(T entity)
         {
             if (!IsTableExist())
@@ -90,6 +114,10 @@ namespace DatabaseAccess
             }
         }
 
+        /// <summary>
+        /// Deletes entity from database.
+        /// </summary>
+        /// <param name="entity">entity for removing.</param>
         private void DeleteEntity(T entity)
         {
             if (!IsTableExist())
@@ -106,6 +134,10 @@ namespace DatabaseAccess
             }
         }
 
+        /// <summary>
+        /// Reads all entitys from database.
+        /// </summary>
+        /// <returns>Collection of entitys.</returns>
         private IEnumerable<T> ReadAllEntities()
         {
             if (!IsTableExist())
@@ -130,6 +162,10 @@ namespace DatabaseAccess
             return listOfTableValues;
         }
 
+        /// <summary>
+        /// Updates entitu in database.
+        /// </summary>
+        /// <param name="entity">Entity for update.</param>
         private void UpdateEntity(object entity)
         {
             if (!IsTableExist())
@@ -151,6 +187,11 @@ namespace DatabaseAccess
             }
         }
 
+        /// <summary>
+        /// Gets update command string.
+        /// </summary>
+        /// <param name="entity">Entity for update.</param>
+        /// <returns>Command string.</returns>
         private string GetUpdateCommand(object entity)
         {
             var updateCommand = new StringBuilder();
@@ -173,6 +214,11 @@ namespace DatabaseAccess
             return updateCommand.ToString();
         }
 
+        /// <summary>
+        /// Returnes instance of Databaseaccess class.
+        /// </summary>
+        /// <param name="connectionString">Connection string to the database.</param>
+        /// <returns>Instance of DatabaseAccess class.</returns>
         public static DatabaseAccess<T> Factory(string connectionString)
         {
             if (_databaseAccess == null)
@@ -189,6 +235,9 @@ namespace DatabaseAccess
             _sqlConnection.Dispose();
         }
 
+        /// <summary>
+        /// Creates table in database for entity.
+        /// </summary>
         private void CreateTable()
         {
             var commands = GetCreateCommands(typeof(T));
@@ -201,6 +250,12 @@ namespace DatabaseAccess
             }
         }
 
+        /// <summary>
+        /// Reads entity from database.
+        /// </summary>
+        /// <param name="type">Type of entity for read.</param>
+        /// <param name="dataReader">Data reader.</param>
+        /// <returns>Entity from the database.</returns>
         private object ReadEntityFromDatabase(Type type, SqlDataReader dataReader)
         {
             var entity = Activator.CreateInstance(type);
@@ -221,6 +276,11 @@ namespace DatabaseAccess
             return entity;
         }
 
+        /// <summary>
+        /// Checks whether the table is in the database.
+        /// </summary>
+        /// <param name="entity">Entity for checking.</param>
+        /// <returns>True if entity exist, False otherwise.</returns>
         private bool IsComplexTypeObjectExist(object entity)
         {
             if (IsTableExist())
@@ -245,6 +305,13 @@ namespace DatabaseAccess
             return false;
         }
 
+        /// <summary>
+        /// Translates database types into premitive types.
+        /// </summary>
+        /// <param name="propertyType">Type of property.</param>
+        /// <param name="columnName">Column name for reading.</param>
+        /// <param name="dataReader">Data reader.</param>
+        /// <returns>Translated value from database.</returns>
         private object ParseDatabaseValue(Type propertyType, string columnName, SqlDataReader dataReader)
         {
             if (propertyType == typeof(short))
@@ -285,6 +352,11 @@ namespace DatabaseAccess
             throw new InvalidCastException("Cant set a property with type " + propertyType.DeclaringType.Name);
         }
 
+        /// <summary>
+        /// Gets command for read all entities.
+        /// </summary>
+        /// <param name="type">Entity type.</param>
+        /// <returns>Select all command.</returns>
         private string GetSelectAllCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
@@ -293,6 +365,11 @@ namespace DatabaseAccess
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets select command.
+        /// </summary>
+        /// <param name="type">Type of entity.</param>
+        /// <returns>Select command string.</returns>
         private string GetSelectCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
@@ -311,6 +388,11 @@ namespace DatabaseAccess
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets all Property names.
+        /// </summary>
+        /// <param name="type">Type for getting names.</param>
+        /// <param name="stringBuilder">String for appending names.</param>
         private void GetPropsNames(Type type, StringBuilder stringBuilder)
         {
             var properties = type.GetProperties();
@@ -330,6 +412,11 @@ namespace DatabaseAccess
             }
         }
 
+        /// <summary>
+        /// Gets delete commmand.
+        /// </summary>
+        /// <param name="type">Type for removing.</param>
+        /// <returns>Delete command line.</returns>
         private string GetDeleteCommand(Type type)
         {
             if (type.GetProperties().Where(e => e.Name.ToUpper() == (type.Name + "Id").ToUpper()).Any())
@@ -342,6 +429,11 @@ namespace DatabaseAccess
             throw new IdPropertyNotFoundException("Class " + type.Name + " dont contain the " + type.Name + "Id Property");
         }
 
+        /// <summary>
+        /// Gets collection of inner complex type objects.
+        /// </summary>
+        /// <param name="obj">Owner of inner complex type.</param>
+        /// <returns>Collection of complex type objects.</returns>
         private IEnumerable<object> GetComplexTypeObjects(object obj)
         {
             var complexTypeObjects = new List<object>()
@@ -358,6 +450,11 @@ namespace DatabaseAccess
             return complexTypeObjects;
         }
 
+        /// <summary>
+        /// Sets property values for adding entity to table.
+        /// </summary>
+        /// <param name="entity">Entity for adding.</param>
+        /// <param name="sqlCommand">Command for executing.</param>
         private void SetProperiesValues(object entity, SqlCommand sqlCommand)
         {
             var properies = entity.GetType().GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() == null);
@@ -367,6 +464,11 @@ namespace DatabaseAccess
             }
         }
 
+        /// <summary>
+        /// Gets command for adding.
+        /// </summary>
+        /// <param name="type">Type to add.</param>
+        /// <returns>Collection of add command strings.</returns>
         private IEnumerable<string> GetAddCommand(Type type)
         {
             var addCommands = new List<string>();
@@ -383,6 +485,11 @@ namespace DatabaseAccess
             return addCommands;
         }
 
+        /// <summary>
+        /// Gets insert command.
+        /// </summary>
+        /// <param name="type">Type to insert.</param>
+        /// <returns>Insert command line.</returns>
         private StringBuilder GetInsertCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
@@ -392,6 +499,11 @@ namespace DatabaseAccess
             return stringBuilder;
         }
 
+        /// <summary>
+        /// Gets values string for adding entity.
+        /// </summary>
+        /// <param name="type">Entity to add.</param>
+        /// <returns>Values string.</returns>
         private string GetValuesString(Type type)
         {
             var stringBuilder = new StringBuilder();
@@ -416,6 +528,11 @@ namespace DatabaseAccess
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets collection of create table commands.
+        /// </summary>
+        /// <param name="type">Type to add.</param>
+        /// <returns>Collection of commands.</returns>
         private IEnumerable<string> GetCreateCommands(Type type)
         {
             var stringBuilder = new StringBuilder();
@@ -432,6 +549,12 @@ namespace DatabaseAccess
             return commands;
         }
 
+        /// <summary>
+        /// Gets create table command.
+        /// </summary>
+        /// <param name="tableName">Table name.</param>
+        /// <param name="properties">Table columns name.</param>
+        /// <returns>Create command line.</returns>
         private string GetCreateTableCommand(string tableName, IEnumerable<PropertyInfo> properties)
         {
             var stringBuilder = new StringBuilder();
@@ -447,6 +570,11 @@ namespace DatabaseAccess
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// Gets sql type for primitive type.
+        /// </summary>
+        /// <param name="propertyType">Primitive property type.</param>
+        /// <returns>Sql type.</returns>
         private string GetSqlTypeOfProperty(Type propertyType)
         {
             if (propertyType == typeof(short))
@@ -487,6 +615,10 @@ namespace DatabaseAccess
             throw new InvalidCastException("Cant create a column with type " + propertyType.DeclaringType.Name);
         }
 
+        /// <summary>
+        /// Checks is table exist.
+        /// </summary>
+        /// <returns>True if table exist, False otherwise.</returns>
         private bool IsTableExist()
         {
             DataTable dTable = _sqlConnection.GetSchema("TABLES",

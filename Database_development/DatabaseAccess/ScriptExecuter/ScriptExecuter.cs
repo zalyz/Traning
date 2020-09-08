@@ -13,7 +13,7 @@ namespace DatabaseAccess.ScriptExecuter
         /// </summary>
         /// <param name="filePath">Script file path.</param>
         /// <param name="connectionString">Connection string of the database.</param>
-        public static void ExecuteScript(string filePath, string connectionString)
+        public static void Execute(string filePath, string connectionString)
         {
             using (var sqlConnection = new SqlConnection(connectionString))
             {

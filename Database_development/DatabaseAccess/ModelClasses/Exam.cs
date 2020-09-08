@@ -26,5 +26,36 @@ namespace DatabaseAccess.ModelClasses
         /// Gets or sets group name.
         /// </summary>
         public string GroupName { get; set; }
+
+        /// <inheritdoc/>
+        public override bool Equals(object obj)
+        {
+            return Equals((Exam)obj);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="exam">Exam for comparing.</param>
+        /// <returns>True if object is equal, False otherwise.</returns>
+        public bool Equals(Exam exam)
+        {
+            return this.ExamId == exam.ExamId &&
+                string.Equals(Name, exam.Name) &&
+                DateTime.Equals(Date, exam.Date) &&
+                string.Equals(GroupName, exam.GroupName);
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return (ExamId, Name, Date, GroupName).GetHashCode();
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return $"{Name} | {Date} | {GroupName}";
+        }
     }
 }

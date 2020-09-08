@@ -9,9 +9,15 @@ using DatabaseAccess.ModelClasses;
 
 namespace DatabaseAccess.ExcelSerialization.Tests
 {
+    /// <summary>
+    /// Defines methods for testing XlsxFormat class.
+    /// </summary>
     [TestFixture]
     public class XlsxFormatTests
     {
+        /// <summary>
+        /// Creates and loads to file exam results data.
+        /// </summary>
         [Test]
         public void SaveToFile_SessionExamResult()
         {
@@ -31,6 +37,9 @@ namespace DatabaseAccess.ExcelSerialization.Tests
             xlsxFormat.SaveToFile(columnNames, listForFile);
         }
 
+        /// <summary>
+        /// Creates and loads to file test results data.
+        /// </summary>
         [Test]
         public void SaveToFile_SessionTestResult()
         {
@@ -50,6 +59,9 @@ namespace DatabaseAccess.ExcelSerialization.Tests
             xlsxFormat.SaveToFile(columnNames, listForFile);
         }
 
+        /// <summary>
+        /// Creates and loads to file Min, middle and max exam mark of the students.
+        /// </summary>
         [Test]
         public void SaveToFile_ExamMinMiddleMaxMarks()
         {
@@ -70,7 +82,10 @@ namespace DatabaseAccess.ExcelSerialization.Tests
             var xlsxFormat = new XlsxFormat<(string, string, int, int, int)>(@"../../../SessionExamMarks.xlsx");
             xlsxFormat.SaveToFile(columnNames, listForFile);
         }
-        
+
+        /// <summary>
+        /// Creates and loads to file Min, middle and max test mark of the students.
+        /// </summary>
         [Test]
         public void SaveToFile_TestMinMiddleMaxMarks()
         {
@@ -92,6 +107,9 @@ namespace DatabaseAccess.ExcelSerialization.Tests
             xlsxFormat.SaveToFile(columnNames, listForFile);
         }
 
+        /// <summary>
+        /// Creates and loades to file list of expelled students.
+        /// </summary>
         [Test]
         public void SaveToFile_ExpelledStudents()
         {
