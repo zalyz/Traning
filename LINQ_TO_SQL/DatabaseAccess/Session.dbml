@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Session" Class="SessionDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Session.mdf;Integrated Security=True" SettingsObjectName="DatabaseAccess.Properties.Settings" SettingsPropertyName="SessionConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Exam" Member="Exams">
+    <Type Name="Exam">
+      <Column Name="ExamId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="GroupName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="TeacherId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Exam_ExamResult" Member="ExamResults" ThisKey="ExamId" OtherKey="ExamId" Type="ExamResult" />
+      <Association Name="Teacher_Exam" Member="Teacher" ThisKey="TeacherId" OtherKey="Id" Type="Teacher" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ExamResult" Member="ExamResults">
+    <Type Name="ExamResult">
+      <Column Name="ExamResultId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ExamId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StudentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Mark" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Exam_ExamResult" Member="Exam" ThisKey="ExamId" OtherKey="ExamId" Type="Exam" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="Student_ExamResult" Member="Student" ThisKey="StudentId" OtherKey="StudentId" Type="Student" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student" Member="Students">
+    <Type Name="Student">
+      <Column Name="StudentId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="MiddleName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="DateOfBirthday" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="StudentGroupId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Student_ExamResult" Member="ExamResults" ThisKey="StudentId" OtherKey="StudentId" Type="ExamResult" />
+      <Association Name="Student_TestResult" Member="TestResults" ThisKey="StudentId" OtherKey="StudentId" Type="TestResult" />
+      <Association Name="StudentGroup_Student" Member="StudentGroup" ThisKey="StudentGroupId" OtherKey="Id" Type="StudentGroup" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.StudentGroup" Member="StudentGroups">
+    <Type Name="StudentGroup">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Association Name="StudentGroup_Student" Member="Students" ThisKey="Id" OtherKey="StudentGroupId" Type="Student" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Teacher" Member="Teachers">
+    <Type Name="Teacher">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="MiddleName" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="Gender" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="Teacher_Exam" Member="Exams" ThisKey="Id" OtherKey="TeacherId" Type="Exam" />
+      <Association Name="Teacher_Test" Member="Tests" ThisKey="Id" OtherKey="TeacherId" Type="Test" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Test" Member="Tests">
+    <Type Name="Test">
+      <Column Name="TestId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Date" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="GroupName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="TeacherId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Test_TestResult" Member="TestResults" ThisKey="TestId" OtherKey="TestId" Type="TestResult" />
+      <Association Name="Teacher_Test" Member="Teacher" ThisKey="TeacherId" OtherKey="Id" Type="Teacher" IsForeignKey="true" DeleteRule="CASCADE" DeleteOnNull="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TestResult" Member="TestResults">
+    <Type Name="TestResult">
+      <Column Name="TestResultId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TestId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="StudentId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Mark" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Student_TestResult" Member="Student" ThisKey="StudentId" OtherKey="StudentId" Type="Student" IsForeignKey="true" DeleteRule="CASCADE" />
+      <Association Name="Test_TestResult" Member="Test" ThisKey="TestId" OtherKey="TestId" Type="Test" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+</Database>

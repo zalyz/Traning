@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAccess", "DatabaseAccess\DatabaseAccess.csproj", "{F53D6D27-9D0C-410D-B3DD-93D680F623BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseAccessTest", "DatabaseAccessTest\DatabaseAccessTest.csproj", "{8663A97E-4536-443F-A32D-A38130F8D707}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F53D6D27-9D0C-410D-B3DD-93D680F623BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F53D6D27-9D0C-410D-B3DD-93D680F623BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F53D6D27-9D0C-410D-B3DD-93D680F623BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F53D6D27-9D0C-410D-B3DD-93D680F623BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8663A97E-4536-443F-A32D-A38130F8D707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8663A97E-4536-443F-A32D-A38130F8D707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8663A97E-4536-443F-A32D-A38130F8D707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8663A97E-4536-443F-A32D-A38130F8D707}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C660FA40-59FB-44C6-AA2B-F57A58BE2491}
+	EndGlobalSection
+EndGlobal
