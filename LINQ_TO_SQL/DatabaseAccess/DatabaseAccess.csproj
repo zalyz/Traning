@@ -75,6 +75,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ResultProcessing\IResultProcessing.cs" />
+    <Compile Include="ResultProcessing\ResultProcessing.cs" />
     <Compile Include="ScriptExecuter\ScriptExecuter.cs" />
     <Compile Include="Session.designer.cs">
       <AutoGen>True</AutoGen>
