@@ -91,6 +91,12 @@ VALUES ('Korovai', 'Irina', 'Olegovna', 'Female', '10-may-2001', 1);
 INSERT INTO Student (FirstName, MiddleName, LastName, Gender, DateOfBirthday, StudentGroupId)
 VALUES ('Abdulov', 'Oleg', 'Aleksandrovich', 'Male', '13-may-2000', 2);
 
+INSERT INTO Student (FirstName, MiddleName, LastName, Gender, DateOfBirthday, StudentGroupId)
+VALUES ('Agli', 'Semen', 'Profilevich', 'Male', '10-june-2000', 2);
+
+INSERT INTO Student (FirstName, MiddleName, LastName, Gender, DateOfBirthday, StudentGroupId)
+VALUES ('Kulbit', 'Sasha', 'Vladivirovich', 'Male', '13-dec-1999', 1);
+
 INSERT INTO Teacher (FirstName, MiddleName, LastName, Gender)
 VALUES ('Mocart', 'Amadey', 'Olegovich', 'Male');
 
@@ -99,6 +105,9 @@ VALUES ('Chaikovski', 'Petr', 'Ilich', 'Male');
 
 INSERT INTO Test (Name, Date, GroupName, TeacherId)
 VALUES ('Art', '27-may-2019', 'IP-21', 1);
+
+INSERT INTO Test (Name, Date, GroupName, TeacherId)
+VALUES ('Art', '27-may-2020', 'IP-21', 2);
 
 INSERT INTO Exam (Name, Date, GroupName, TeacherId)
 VALUES ('Math', '10-june-2019', 'IP-21', 1);
@@ -109,8 +118,26 @@ VALUES ('Programming', '15-june-2020', 'KS-41', 2);
 INSERT INTO TestResult (TestId, StudentId, Mark)
 VALUES (1, 1, 7);
 
+INSERT INTO TestResult (TestId, StudentId, Mark)
+VALUES (1, 2, 6);
+
+INSERT INTO TestResult (TestId, StudentId, Mark)
+VALUES (2, 3, 5);
+
+INSERT INTO TestResult (TestId, StudentId, Mark)
+VALUES (1, 4, 8);
+
 INSERT INTO ExamResult (ExamId, StudentId, Mark)
 VALUES (1, 1, 5);
 
 INSERT INTO ExamResult (ExamId, StudentId, Mark)
 VALUES (2, 2, 2);
+
+INSERT INTO ExamResult (ExamId, StudentId, Mark)
+VALUES (1, 3, 6);
+
+INSERT INTO ExamResult (ExamId, StudentId, Mark)
+VALUES (2, 3, 7);
+
+INSERT INTO ExamResult (ExamId, StudentId, Mark)
+VALUES (2, 4, 8);

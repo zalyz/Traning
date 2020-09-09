@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DatabaseAccess.ResultProcessing
 {
+    /// <summary>
+    /// Defines methods for processing test and exam results.
+    /// </summary>
     public class ResultProcessing : IResultProcessing
     {
         /// <inheritdoc/>
@@ -44,15 +45,15 @@ namespace DatabaseAccess.ResultProcessing
             var averageScore = new List<(string, double, string)>(averageScoreOfTests);
             averageScore.AddRange(averageScoreOfExams);
 
-            return averageScore.OrderBy(e => e.Item1).ThenBy(e => e.Item2).ToList();
+            return averageScore.OrderBy(e => e.Item3).ThenBy(e => e.Item1).ToList();
         }
 
         /// <summary>
-        /// 
+        /// Sums two collection of average score.
         /// </summary>
         /// <param name="firstList"></param>
         /// <param name="secondList"></param>
-        /// <returns></returns>
+        /// <returns>Sum of two collection.</returns>
         private IEnumerable<(string, double, string)> SumResultOfTestsAndExams(IEnumerable<(string, double, string)> firstList, IEnumerable<(string, double, string)> secondList)
         {
             if (secondList.Count() > firstList.Count())
@@ -86,11 +87,11 @@ namespace DatabaseAccess.ResultProcessing
         }
 
         /// <summary>
-        /// 
+        /// Returns average score of tests.
         /// </summary>
-        /// <param name="testResults"></param>
-        /// <param name="func"></param>
-        /// <returns></returns>
+        /// <param name="testResults">collection of test results.</param>
+        /// <param name="func">The criterion for selection.</param>
+        /// <returns>Collection that contains time of year, average mark and criterion name.</returns>
         private IEnumerable<(string, double, string)> AverageScoreOfTestsBy(IEnumerable<TestResult> testResults, Func<TestResult, string> func)
         {
             var september = 10;
@@ -122,11 +123,11 @@ namespace DatabaseAccess.ResultProcessing
         }
 
         /// <summary>
-        /// 
+        /// Returns average score of exams.
         /// </summary>
         /// <param name="examResults"></param>
-        /// <param name="func"></param>
-        /// <returns></returns>
+        /// <param name="func">The criterion for selection.</param>
+        /// <returns>Collection that contains time of year, average mark and criterion name.</returns>
         private IEnumerable<(string, double, string)> AverageScoreOfExamsBy(IEnumerable<ExamResult> examResults, Func<ExamResult, string> func)
         {
             var september = 10;
