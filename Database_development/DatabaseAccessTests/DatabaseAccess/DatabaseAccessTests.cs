@@ -9,6 +9,8 @@ namespace DatabaseAccess.Tests
     [TestFixture]
     public class DatabaseAccessTests
     {
+        private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
+
         /// <summary>
         /// Create tables in database and fill it with data.
         /// </summary>
@@ -16,8 +18,7 @@ namespace DatabaseAccess.Tests
         public void ClassInitialize()
         {
             var filePath = @"../../../CreateAndFillDatabase.sql";
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            ScriptExecuter.ScriptExecuter.Execute(filePath, connectionString);
+            ScriptExecuter.ScriptExecuter.Execute(filePath, _connectionString);
         }
 
         /// <summary>
@@ -27,8 +28,7 @@ namespace DatabaseAccess.Tests
         public void AddTest_TestResultSaved(int resultId, string testName, int testId, string groupName,
             int studentId ,string fName, string midName, string lName, string gender, int mark)
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var databaseAccess = DatabaseAccess<TestResult>.Factory(connectionString);
+            var databaseAccess = DatabaseAccess<TestResult>.Factory(_connectionString);
             var testResult = new TestResult()
             {
                 Test = new Test()
@@ -64,8 +64,7 @@ namespace DatabaseAccess.Tests
         public void AddTest_ExamResultSaved(int resultId, string testName, int examId, string groupName,
             int studentId ,string fName, string midName, string lName, string gender, int mark)
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var databaseAccess = DatabaseAccess<ExamResult>.Factory(connectionString);
+            var databaseAccess = DatabaseAccess<ExamResult>.Factory(_connectionString);
             var examResult = new ExamResult()
             {
                 Exam = new Exam()
@@ -101,8 +100,7 @@ namespace DatabaseAccess.Tests
         public void Delete_TestResultDeleted(int resultId, string testName, int testId, string groupName,
             int studentId, string fName, string midName, string lName, string gender, int mark)
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var databaseAccess = DatabaseAccess<TestResult>.Factory(connectionString);
+            var databaseAccess = DatabaseAccess<TestResult>.Factory(_connectionString);
             var testResult = new TestResult()
             {
                 Test = new Test()
@@ -137,8 +135,7 @@ namespace DatabaseAccess.Tests
         [Test]
         public void ReadAll_TestResultsAreReaded()
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var databaseAccess = DatabaseAccess<TestResult>.Factory(connectionString);
+            var databaseAccess = DatabaseAccess<TestResult>.Factory(_connectionString);
             var expectedCollection = new List<TestResult>()
             {
                 new TestResult()
@@ -171,8 +168,7 @@ namespace DatabaseAccess.Tests
         public void Update_EaxamResultUpdated(int resultId, string testName, int examId, string groupName,
             int studentId, string fName, string midName, string lName, string gender, int mark)
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var databaseAccess = DatabaseAccess<ExamResult>.Factory(connectionString);
+            var databaseAccess = DatabaseAccess<ExamResult>.Factory(_connectionString);
             var examResult = new ExamResult()
             {
                 Exam = new Exam()
@@ -207,8 +203,7 @@ namespace DatabaseAccess.Tests
         [Test]
         public void FactoryTest()
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var databaseAccess = DatabaseAccess<ExamResult>.Factory(connectionString);
+            var databaseAccess = DatabaseAccess<ExamResult>.Factory(_connectionString);
         }
     }
 }

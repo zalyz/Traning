@@ -15,14 +15,15 @@ namespace DatabaseAccess.ExcelSerialization.Tests
     [TestFixture]
     public class XlsxFormatTests
     {
+        private readonly string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
+        
         /// <summary>
         /// Creates and loads to file exam results data.
         /// </summary>
         [Test]
         public void SaveToFile_SessionExamResult()
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var dataAccess = DatabaseAccess<ExamResult>.Factory(connectionString);
+            var dataAccess = DatabaseAccess<ExamResult>.Factory(_connectionString);
             var resProc = new ResultProcessing.ResultProcessing();
             var listForFile = resProc.SessionResults(dataAccess);
             var columnNames = new string[]
@@ -43,8 +44,7 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         [Test]
         public void SaveToFile_SessionTestResult()
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var dataAccess = DatabaseAccess<TestResult>.Factory(connectionString);
+            var dataAccess = DatabaseAccess<TestResult>.Factory(_connectionString);
             var resProc = new ResultProcessing.ResultProcessing();
             var listForFile = resProc.SessionResults(dataAccess);
             var columnNames = new string[]
@@ -65,8 +65,7 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         [Test]
         public void SaveToFile_ExamMinMiddleMaxMarks()
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var dataAccess = DatabaseAccess<ExamResult>.Factory(connectionString);
+            var dataAccess = DatabaseAccess<ExamResult>.Factory(_connectionString);
             var resProc = new ResultProcessing.ResultProcessing();
             var listForFile = resProc.SessionMarks(dataAccess);
 
@@ -89,8 +88,7 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         [Test]
         public void SaveToFile_TestMinMiddleMaxMarks()
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var dataAccess = DatabaseAccess<TestResult>.Factory(connectionString);
+            var dataAccess = DatabaseAccess<TestResult>.Factory(_connectionString);
             var resProc = new ResultProcessing.ResultProcessing();
             var listForFile = resProc.SessionMarks(dataAccess);
 
@@ -113,9 +111,8 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         [Test]
         public void SaveToFile_ExpelledStudents()
         {
-            var connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\Database_development\DatabaseAccess\Session.mdf;Integrated Security=True";
-            var dataAccessTest = DatabaseAccess<TestResult>.Factory(connectionString);
-            var dataAccessResult = DatabaseAccess<ExamResult>.Factory(connectionString);
+            var dataAccessTest = DatabaseAccess<TestResult>.Factory(_connectionString);
+            var dataAccessResult = DatabaseAccess<ExamResult>.Factory(_connectionString);
             var resProc = new ResultProcessing.ResultProcessing();
             var listOfTestResult = resProc.GetExpelledStudents(dataAccessResult);
             var listOfExamResult = resProc.GetExpelledStudents(dataAccessTest);

@@ -117,7 +117,7 @@ namespace DatabaseAccess
         /// <summary>
         /// Deletes entity from database.
         /// </summary>
-        /// <param name="entity">entity for removing.</param>
+        /// <param name="entity">Entity for removing.</param>
         private void DeleteEntity(T entity)
         {
             if (!IsTableExist())
@@ -374,6 +374,18 @@ namespace DatabaseAccess
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("SELECT * FROM " + type.Name + " ");
+            GetJoinCommand(type, stringBuilder);
+
+            return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        /// Gets join string for getting field values from database.
+        /// </summary>
+        /// <param name="type">Type of object for getting fields values from database..</param>
+        /// <param name="stringBuilder">StringBuilder for appending join command.</param>
+        private static void GetJoinCommand(Type type, StringBuilder stringBuilder)
+        {
             var complexTypeProps = type.GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() != null).ToList();
             if (complexTypeProps.Any())
             {
@@ -381,11 +393,9 @@ namespace DatabaseAccess
                 {
                     var foreignKey = complexTypeProps[index].GetCustomAttribute<ForeignKeyAttribute>().KeyName;
                     stringBuilder.Append($"JOIN {complexTypeProps[index].PropertyType.Name} ON {type.Name}.{foreignKey} = {complexTypeProps[index].PropertyType.Name}.{complexTypeProps[index].PropertyType.Name}Id ");
-                    
+                    GetJoinCommand(complexTypeProps[index].PropertyType, stringBuilder);
                 }
             }
-
-            return stringBuilder.ToString();
         }
 
         /// <summary>
