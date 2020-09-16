@@ -15,13 +15,11 @@ namespace DatabaseAccessTest
         /// <summary>
         /// Connection string to the database.
         /// </summary>
-        private string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\LINQ_TO_SQL\DatabaseAccess\Session.mdf;Integrated Security=True";
+        private string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\LINQ_TO_SQL\DatabaseAccess\Session.mdf;Integrated Security=True";
 
         /// <summary>
         /// Creates tables in the database and fill it.
         /// </summary>
-        private string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\LINQ_TO_SQL\DatabaseAccess\Session.mdf;Integrated Security=True";
-
         [OneTimeSetUp]
         public void ClassInitialize()
         {

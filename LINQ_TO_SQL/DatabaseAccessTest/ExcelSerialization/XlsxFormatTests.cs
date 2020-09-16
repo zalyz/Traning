@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using DatabaseAccess.ResultProcessing;
+using NUnit.Framework;
 
 namespace DatabaseAccess.ExcelSerialization.Tests
 {
@@ -19,7 +20,7 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         [Test]
         public void SaveToFile_AverageScoreInSpecialtySaved()
         {
-            var xlsxFormat = new XlsxFormat<(string, double, string)>("AverageScoreBySpecialty.xlsx");
+            var xlsxFormat = new XlsxFormat<IReport>("AverageScoreBySpecialty.xlsx");
             var columnNames = new string[3] { "Year", "Average Mark", "Specialty" };
             var averageScore = new ResultProcessing.ResultProcessing().AverageScoreInSpecialty(new SessionDataContext(_connectionString));
             xlsxFormat.SaveToFile(columnNames, averageScore);
@@ -31,7 +32,7 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         [Test]
         public void SaveToFile_AverageScoreByTeacherSaved()
         {
-            var xlsxFormat = new XlsxFormat<(string, double, string)>("AverageScoreByTeacher.xlsx");
+            var xlsxFormat = new XlsxFormat<IReport>("AverageScoreByTeacher.xlsx");
             var columnNames = new string[3] { "Year", "Average Mark", "Teacher" };
             var averageScore = new ResultProcessing.ResultProcessing().AverageScoreByTeacher(new SessionDataContext(_connectionString));
             xlsxFormat.SaveToFile(columnNames, averageScore);
@@ -43,7 +44,7 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         [Test]
         public void SaveToFile_DynamicsOfTheAverageScoreSaved()
         {
-            var xlsxFormat = new XlsxFormat<(string, double, string)>("DynamicsOfTheAverageScore.xlsx");
+            var xlsxFormat = new XlsxFormat<IReport>("DynamicsOfTheAverageScore.xlsx");
             var columnNames = new string[3] { "Year", "Average Mark", "Subject" };
             var averageScore = new ResultProcessing.ResultProcessing().DynamicsOfTheAverageScore(new SessionDataContext(_connectionString));
             xlsxFormat.SaveToFile(columnNames, averageScore);

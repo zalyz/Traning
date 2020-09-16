@@ -10,7 +10,7 @@ namespace DatabaseAccess.ResultProcessing
     public class ResultProcessing : IResultProcessing
     {
         /// <inheritdoc/>
-        public IEnumerable<(string, double, string)> AverageScoreInSpecialty(SessionDataContext context)
+        public IEnumerable<IReport> AverageScoreInSpecialty(SessionDataContext context)
         {
             var listOfTestResults = context.TestResults.ToList();
             var listOfExamResults = context.ExamResults.ToList();
@@ -21,7 +21,7 @@ namespace DatabaseAccess.ResultProcessing
         }
 
         /// <inheritdoc/>
-        public IEnumerable<(string, double, string)> AverageScoreByTeacher(SessionDataContext context)
+        public IEnumerable<IReport> AverageScoreByTeacher(SessionDataContext context)
         {
             var listOfTestResults = context.TestResults.ToList();
             var listOfExamResults = context.ExamResults.ToList();
@@ -35,17 +35,17 @@ namespace DatabaseAccess.ResultProcessing
         }
 
         /// <inheritdoc/>
-        public IEnumerable<(string, double, string)> DynamicsOfTheAverageScore(SessionDataContext context)
+        public IEnumerable<IReport> DynamicsOfTheAverageScore(SessionDataContext context)
         {
             var listOfTestResults = context.TestResults.ToList();
             var listOfExamResults = context.ExamResults.ToList();
 
             var averageScoreOfTests = AverageScoreOfTestsBy(listOfTestResults, e => e.Test.Name);
             var averageScoreOfExams = AverageScoreOfExamsBy(listOfExamResults, e => e.Exam.Name);
-            var averageScore = new List<(string, double, string)>(averageScoreOfTests);
+            var averageScore = new List<IReport>(averageScoreOfTests);
             averageScore.AddRange(averageScoreOfExams);
 
-            return averageScore.OrderBy(e => e.Item3).ThenBy(e => e.Item1).ToList();
+            return averageScore.OrderBy(e => e.Criteria).ThenBy(e => e.SessionName).ToList();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace DatabaseAccess.ResultProcessing
         /// <param name="firstList"></param>
         /// <param name="secondList"></param>
         /// <returns>Sum of two collection.</returns>
-        private IEnumerable<(string, double, string)> SumResultOfTestsAndExams(IEnumerable<(string, double, string)> firstList, IEnumerable<(string, double, string)> secondList)
+        private IEnumerable<IReport> SumResultOfTestsAndExams(IEnumerable<IReport> firstList, IEnumerable<IReport> secondList)
         {
             if (secondList.Count() > firstList.Count())
             {
@@ -63,16 +63,16 @@ namespace DatabaseAccess.ResultProcessing
                 secondList = tmp;
             }
 
-            var averageScoreInSpecialty = new List<(string, double, string)>();
+            var averageScoreInSpecialty = new List<IReport>();
             foreach (var result in firstList)
             {
-                var resultFromSecondList = secondList.Where(e => e.Item3 == result.Item3 && e.Item1 == result.Item1);
+                var resultFromSecondList = secondList.Where(e => e.Criteria == result.Criteria && e.SessionName == result.SessionName);
                 if (resultFromSecondList.Any())
                 {
-                    (string Year, double AverageScore, string Key) score;
-                    score.Year = result.Item1;
-                    score.AverageScore = (result.Item2 + resultFromSecondList.First().Item2) / 2;
-                    score.Key = result.Item3;
+                    IReport score = new SessionReport();
+                    score.SessionName = result.SessionName;
+                    score.AverageMark = (result.AverageMark + resultFromSecondList.First().AverageMark) / 2;
+                    score.Criteria = result.Criteria;
                     secondList = secondList.Where(e => e != resultFromSecondList.First());
                     averageScoreInSpecialty.Add(score);
                 }
@@ -83,7 +83,7 @@ namespace DatabaseAccess.ResultProcessing
             }
 
             averageScoreInSpecialty.AddRange(secondList);
-            return averageScoreInSpecialty.OrderBy(e => e.Item1).ToList();
+            return averageScoreInSpecialty.OrderBy(e => e.SessionName).ToList();
         }
 
         /// <summary>
@@ -92,12 +92,12 @@ namespace DatabaseAccess.ResultProcessing
         /// <param name="testResults">collection of test results.</param>
         /// <param name="func">The criterion for selection.</param>
         /// <returns>Collection that contains time of year, average mark and criterion name.</returns>
-        private IEnumerable<(string, double, string)> AverageScoreOfTestsBy(IEnumerable<TestResult> testResults, Func<TestResult, string> func)
+        private IEnumerable<IReport> AverageScoreOfTestsBy(IEnumerable<TestResult> testResults, Func<TestResult, string> func)
         {
             var september = 10;
             var april = 4;
             var groupedByYear = testResults.GroupBy(e => e.Test.Date.Value.Year);
-            var averageScore = new List<(string, double, string)>();
+            var averageScore = new List<IReport>();
             foreach (var year in groupedByYear)
             {
                 var groupedByMonth = year.GroupBy(
@@ -109,11 +109,11 @@ namespace DatabaseAccess.ResultProcessing
                     var groupedByGroup = isWinter.GroupBy(func);
                     foreach (var group in groupedByGroup)
                     {
-                        (string Year, double AverageMark, string Group) score;
+                        IReport score = new SessionReport();
                         var timeOfYear = isWinter.Key == true ? "Winter" : "Summer";
-                        score.Year = $"{timeOfYear}/{year.Key}";
+                        score.SessionName = $"{timeOfYear}/{year.Key}";
                         score.AverageMark = group.Sum(e => e.Mark).Value / group.Count();
-                        score.Group = group.Key;
+                        score.Criteria = group.Key;
                         averageScore.Add(score);
                     }
                 }
@@ -128,12 +128,12 @@ namespace DatabaseAccess.ResultProcessing
         /// <param name="examResults"></param>
         /// <param name="func">The criterion for selection.</param>
         /// <returns>Collection that contains time of year, average mark and criterion name.</returns>
-        private IEnumerable<(string, double, string)> AverageScoreOfExamsBy(IEnumerable<ExamResult> examResults, Func<ExamResult, string> func)
+        private IEnumerable<IReport> AverageScoreOfExamsBy(IEnumerable<ExamResult> examResults, Func<ExamResult, string> func)
         {
             var september = 10;
             var april = 4;
             var groupedByYear = examResults.GroupBy(e => e.Exam.Date.Value.Year);
-            var averageScore = new List<(string, double, string)>();
+            var averageScore = new List<IReport>();
             foreach (var year in groupedByYear)
             {
                 var groupedByMonth = year.GroupBy(
@@ -145,11 +145,11 @@ namespace DatabaseAccess.ResultProcessing
                     var groupedByGroup = isWinter.GroupBy(func);
                     foreach (var group in groupedByGroup)
                     {
-                        (string Year, double AverageMark, string Group) score;
+                        IReport score = new SessionReport();
                         var timeOfYear = isWinter.Key == true ? "Winter" : "Summer";
-                        score.Year = $"{timeOfYear}/{year.Key}";
+                        score.SessionName = $"{timeOfYear}/{year.Key}";
                         score.AverageMark = group.Sum(e => e.Mark).Value / group.Count();
-                        score.Group = group.Key;
+                        score.Criteria = group.Key;
                         averageScore.Add(score);
                     }
                 }

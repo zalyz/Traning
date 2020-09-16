@@ -43,7 +43,7 @@ namespace DatabaseAccess.ExcelSerialization
         /// <param name="worksheet">Instance of Exel worksheet.</param>
         private void SetRowValues(IEnumerable<T> values, ExcelWorksheet worksheet)
         {
-            var fields = typeof(T).GetFields();
+            var fields = typeof(T).GetProperties();
             var row = 2;
             foreach (var item in values)
             {

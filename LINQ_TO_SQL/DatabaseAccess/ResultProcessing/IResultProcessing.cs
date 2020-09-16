@@ -12,20 +12,20 @@ namespace DatabaseAccess.ResultProcessing
         /// </summary>
         /// <param name="context">Context for accessing the database.</param>
         /// <returns>Collection that contains time of year, average mark and group name.</returns>
-        IEnumerable<(string, double, string)> AverageScoreInSpecialty(SessionDataContext context);
+        IEnumerable<IReport> AverageScoreInSpecialty(SessionDataContext context);
 
         /// <summary>
         /// Returns average score by teacher.
         /// </summary>
         /// <param name="context">Context for accessing the database.</param>
         /// <returns>Collection that contains time of year, average mark and teacher name.</returns>
-        IEnumerable<(string, double, string)> AverageScoreByTeacher(SessionDataContext context);
+        IEnumerable<IReport> AverageScoreByTeacher(SessionDataContext context);
 
         /// <summary>
         /// Returns average score by test and exam names.
         /// </summary>
         /// <param name="context">Context for accessing the database.</param>
         /// <returns>Collection that contains time of year, average mark and test or exam names.</returns>
-        IEnumerable<(string, double, string)> DynamicsOfTheAverageScore(SessionDataContext context);
+        IEnumerable<IReport> DynamicsOfTheAverageScore(SessionDataContext context);
     }
 }
