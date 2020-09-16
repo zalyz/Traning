@@ -12,7 +12,7 @@ namespace DatabaseAccess.ExcelSerialization.Tests
         /// <summary>
         /// Connection string to the database.
         /// </summary>
-        private string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\LINQ_TO_SQL\DatabaseAccess\Session.mdf;Integrated Security=True";
+        private string _connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\slava\Desktop\Traning\LINQ_TO_SQL\DatabaseAccess\Session.mdf;Integrated Security=True";
 
         /// <summary>
         /// Saves to the xlsx file average score by spetialty.
