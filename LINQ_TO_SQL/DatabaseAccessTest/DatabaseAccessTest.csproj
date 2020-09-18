@@ -62,9 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="AverageScoreBySpecialty.xlsx" />
-    <None Include="AverageScoreByTeacher.xlsx" />
-    <None Include="DynamicsOfTheAverageScore.xlsx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -72,9 +69,6 @@
       <Project>{F53D6D27-9D0C-410D-B3DD-93D680F623BB}</Project>
       <Name>DatabaseAccess</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CreateDatabaseAndFill.sql" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
