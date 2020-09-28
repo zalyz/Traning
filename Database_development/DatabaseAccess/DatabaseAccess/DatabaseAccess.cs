@@ -100,7 +100,7 @@ namespace DatabaseAccess
 
             var addCommands = GetAddCommand(typeof(T));
             var complexTypeObjects = GetComplexTypeObjects(entity);
-            for (int index = 0; index < addCommands.Count(); index++)
+            for (int index = addCommands.Count() - 1; index >= 0; index--)
             {
                 if (!IsComplexTypeObjectExist(complexTypeObjects.ElementAt(index)))
                 {
@@ -195,8 +195,12 @@ namespace DatabaseAccess
         private string GetUpdateCommand(object entity)
         {
             var updateCommand = new StringBuilder();
-            updateCommand.Append($"UPDATE {entity.GetType().Name} SET ");
-            var properties = entity.GetType().GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() == null);
+            var entityType = entity.GetType();
+            updateCommand.Append($"UPDATE {entityType.Name} SET ");
+            var properties = entityType.GetProperties().Where(e => e.GetCustomAttribute<ForeignKeyAttribute>() == null).ToList();
+            var idProperty = entityType.GetProperty($"{entityType.Name}Id");
+            properties.RemoveAt(properties.IndexOf(idProperty));
+            
             for (int index = 0; index < properties.Count(); index++)
             {
                 if (index < properties.Count() - 1)
@@ -208,8 +212,7 @@ namespace DatabaseAccess
                     updateCommand.Append(properties.ElementAt(index).Name + "=@" + properties.ElementAt(index).Name + " ");
                 }
             }
-            var idProperty = entity.GetType().GetProperty(entity.GetType().Name + "Id");
-            updateCommand.Append($"WHERE {entity.GetType().Name}Id = {idProperty.GetValue(entity)} ");
+            updateCommand.Append($"WHERE {entityType.Name}Id = {idProperty.GetValue(entity)} ");
 
             return updateCommand.ToString();
         }
@@ -503,6 +506,8 @@ namespace DatabaseAccess
         private StringBuilder GetInsertCommand(Type type)
         {
             var stringBuilder = new StringBuilder();
+
+            stringBuilder.Append($"SET IDENTITY_INSERT {type.Name} ON\n");
             stringBuilder.Append("INSERT " + type.Name + " (");
             GetPropsNames(type, stringBuilder);
             stringBuilder.Append(") ");

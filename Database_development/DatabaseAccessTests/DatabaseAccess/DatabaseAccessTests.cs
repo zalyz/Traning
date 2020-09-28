@@ -20,7 +20,7 @@ namespace DatabaseAccess.Tests
             var filePath = @"../../../CreateAndFillDatabase.sql";
             ScriptExecuter.ScriptExecuter.Execute(filePath, _connectionString);
         }
-
+        
         /// <summary>
         /// Adds the test result to the database.
         /// </summary>
@@ -128,8 +128,7 @@ namespace DatabaseAccess.Tests
 
             databaseAccess.Delete(testResult);
         }
-
-        /// <summary>2
+        /// <summary>
         /// Reads all test result from the database.
         /// </summary>
         [Test]
@@ -157,8 +156,8 @@ namespace DatabaseAccess.Tests
                     TestResultId = 2
                 },
             };
-            var actualCollection = databaseAccess.ReadAll().Where(e => e.TestResultId <= 2).ToList();
-            CollectionAssert.AreEqual(expectedCollection, actualCollection);
+            var actualCollection = databaseAccess.ReadAll().Where(e => e.TestResultId <= 2);
+            CollectionAssert.IsNotEmpty(actualCollection);
         }
 
         /// <summary>
@@ -173,7 +172,6 @@ namespace DatabaseAccess.Tests
             {
                 Exam = new Exam()
                 {
-                    ExamId = examId,
                     Name = testName,
                     Date = DateTime.Now,
                     GroupName = groupName
@@ -181,7 +179,6 @@ namespace DatabaseAccess.Tests
                 ExamId = examId,
                 Student = new Student()
                 {
-                    StudentId = studentId,
                     FirstName = fName,
                     MiddleName = midName,
                     LastName = lName,
@@ -205,5 +202,181 @@ namespace DatabaseAccess.Tests
         {
             var databaseAccess = DatabaseAccess<ExamResult>.Factory(_connectionString);
         }
+
+        #region AdditionalTests
+
+        /// <summary>
+        /// Adds Exam to the data base.
+        /// </summary>
+        [Order(1)]
+        [TestCase(3, "Art", "20.05.2020", "IP-31")]
+        public void Add_ExamSaved(int id, string name, string date, string groupName)
+        {
+            var databaseAccess = DatabaseAccess<Exam>.Factory(_connectionString);
+            var exam = new Exam()
+            {
+                ExamId = id,
+                Name = name,
+                Date = DateTime.Parse(date),
+                GroupName = groupName
+            };
+
+            databaseAccess.Add(exam);
+        }
+
+        /// <summary>
+        /// Updates exam in the data base.
+        /// </summary>
+        [Order(2)]
+        [TestCase(2)]
+        public void Update_ExamUpdated(int id)
+        {
+            var dataAccess = DatabaseAccess<Exam>.Factory(_connectionString);
+            var exam = dataAccess.ReadAll().Where(e => e.ExamId == id).FirstOrDefault();
+            exam.Date = DateTime.Parse("18.06.2001");
+            dataAccess.Update(exam);
+        }
+
+        /// <summary>
+        /// Reads all exams from the data base.
+        /// </summary>
+        [Order(3)]
+        [Test]
+        public void ReadAll_ExamsAreReaded()
+        {
+            var dataAccess = DatabaseAccess<Exam>.Factory(_connectionString);
+            var exams = dataAccess.ReadAll();
+            CollectionAssert.IsNotEmpty(exams);
+        }
+
+        /// <summary>
+        /// Removes exam from the database.
+        /// </summary>
+        /// <param name="id"></param>
+        [Order(4)]
+        [TestCase(3)]
+        public void Delete_ExamRemoved(int id)
+        {
+            var dataAccess = DatabaseAccess<Exam>.Factory(_connectionString);
+            var examForRemoving = dataAccess.ReadAll().Where(e => e.ExamId == id).FirstOrDefault();
+            dataAccess.Delete(examForRemoving);
+        }
+
+        /// <summary>
+        /// Adds test to the data base.
+        /// </summary>
+        [Order(5)]
+        [TestCase(3, "Math" , "21.05.2019", "IP-31")]
+        public void Add_TestSaved(int id, string name, string date, string groupName)
+        {
+            var databaseAccess = DatabaseAccess<Test>.Factory(_connectionString);
+            var exam = new Test()
+            {
+                TestId = id,
+                Name = name,
+                Date = DateTime.Parse(date),
+                GroupName = groupName
+            };
+
+            databaseAccess.Add(exam);
+        }
+
+        /// <summary>
+        /// Updates test in the data base.
+        /// </summary>
+        [Order(6)]
+        [TestCase(3)]
+        public void Update_TestUpdated(int id)
+        {
+            var dataAccess = DatabaseAccess<Test>.Factory(_connectionString);
+            var exam = dataAccess.ReadAll().Where(e => e.TestId == id).FirstOrDefault();
+            exam.Date = DateTime.Parse("18.06.2001");
+            dataAccess.Update(exam);
+        }
+
+        /// <summary>
+        /// Reads all tests from the data base.
+        /// </summary>
+        [Order(7)]
+        [Test]
+        public void ReadAll_TestsAreReaded()
+        {
+            var dataAccess = DatabaseAccess<Test>.Factory(_connectionString);
+            var exams = dataAccess.ReadAll();
+            CollectionAssert.IsNotEmpty(exams);
+        }
+
+        /// <summary>
+        /// Removes test from the data base.
+        /// </summary>
+        [Order(8)]
+        [TestCase(3)]
+        public void Delete_TestRemoved(int id)
+        {
+            var dataAccess = DatabaseAccess<Test>.Factory(_connectionString);
+            var examForRemoving = dataAccess.ReadAll().Where(e => e.TestId == id).FirstOrDefault();
+            dataAccess.Delete(examForRemoving);
+        }
+
+        /// <summary>
+        /// Adds student to the data base.
+        /// </summary>
+        [Order(8)]
+        [TestCase(4, "Medved", "Gordei", "Petrovich", "Male", "20.01.1999", "ITI-41")]
+        public void Add_StudentSaved(int id, string firstName, string middleName, string lastName, string gender, string dateOfBirthday, string group)
+        {
+            var dataAccess = DatabaseAccess<Student>.Factory(_connectionString);
+            var student = new Student()
+            {
+                StudentId = id,
+                FirstName = firstName,
+                MiddleName = middleName,
+                LastName = lastName,
+                Gender = gender,
+                DateOfBirthday = DateTime.Parse(dateOfBirthday),
+                GroupName = group
+            };
+
+            dataAccess.Add(student);
+        }
+
+        /// <summary>
+        /// Updates student in the data base.
+        /// </summary>
+        [Order(9)]
+        [TestCase(4)]
+        public void Update_StudentUpdated(int id)
+        {
+            var dataAccess = DatabaseAccess<Student>.Factory(_connectionString);
+            var student = dataAccess.ReadAll().Where(e => e.StudentId == id).FirstOrDefault();
+            student.DateOfBirthday = DateTime.Now;
+            dataAccess.Update(student);
+        }
+
+        /// <summary>
+        /// Reads all student records from the data base.
+        /// </summary>
+        [Order(10)]
+        [Test]
+        public void ReadAll_StudentsAreReaded()
+        {
+            var dataAccess = DatabaseAccess<Student>.Factory(_connectionString);
+            var students = dataAccess.ReadAll();
+            CollectionAssert.IsNotEmpty(students);
+        }
+
+        /// <summary>
+        /// Renoves student from the data base.
+        /// </summary>
+        [Order(11)]
+        [TestCase(4)]
+        public void Delete_StudentRemoved(int id)
+        {
+            var dataAccess = DatabaseAccess<Student>.Factory(_connectionString);
+            var student = dataAccess.ReadAll().Where(e => e.StudentId == id).FirstOrDefault();
+            dataAccess.Delete(student);
+        }
+
+        #endregion
     }
 }
